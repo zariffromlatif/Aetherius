@@ -35,11 +35,16 @@ Aetherius combines a pilot-ready risk operations backend with a top-level causal
 
 ## Core Framing
 
-```text
-S_{t+1} ~ T(S_t, A_t, w)
-```
+$$
+S_{t+1} \sim T(S_t, A_t, \omega)
+$$
 
-Where `S_t` is the current graph-enhanced market state, `A_t` is a causal shock, and `w` captures latent uncertainty.
+Where:
+
+- \(S_t\): current graph-enhanced market belief state
+- \(A_t\): causal intervention (shock) applied at time \(t\)
+- \(\omega\): latent uncertainty factors
+- \(T(\cdot)\): transition dynamics mapping current state and intervention to next state
 
 ## Repository Highlights
 
