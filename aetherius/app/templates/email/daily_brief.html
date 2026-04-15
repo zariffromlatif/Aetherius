@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <body>
+    <h2>Aetherius Daily Brief</h2>
+    <p>Run type: {{ run.run_type }} | Version: {{ run.version }}</p>
+    <hr />
+    {% for item in items %}
+    <h3>{{ item.title or item.section_type }}</h3>
+    <p><b>Severity:</b> {{ item.severity_level or "n/a" }} | <b>Confidence:</b> {{ item.confidence_level or "n/a" }}</p>
+    <p>{{ item.body }}</p>
+    {% endfor %}
+  </body>
+</html>

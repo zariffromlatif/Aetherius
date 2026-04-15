@@ -1,0 +1,9 @@
+<!doctype html>
+<html><body>
+<h1>Evidence Inbox</h1>
+<ul>
+{% for o in observations %}
+  <li>{{ o.source_name }} | stale={{ o.stale }} | {{ o.title or "untitled" }}</li>
+{% endfor %}
+</ul>
+</body></html>

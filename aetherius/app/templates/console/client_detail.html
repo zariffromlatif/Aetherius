@@ -1,0 +1,11 @@
+<!doctype html>
+<html><body>
+<h1>{{ client.name }}</h1>
+<p>Status: {{ client.status }}</p>
+<h2>Watchlists</h2>
+<ul>
+{% for w in watchlists %}
+  <li><a href="/api/v1/console/watchlists/{{ w.id }}">{{ w.name }}</a></li>
+{% endfor %}
+</ul>
+</body></html>

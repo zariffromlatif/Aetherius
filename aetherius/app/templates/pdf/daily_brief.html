@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Aetherius Client Brief</h1>
+    <p>Generated for internal pilot workflow.</p>
+    {% for item in items %}
+    <h2>{{ item.title or item.section_type }}</h2>
+    <p>{{ item.body }}</p>
+    {% endfor %}
+  </body>
+</html>

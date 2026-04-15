@@ -1,0 +1,74 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/aetherius
+      REDIS_URL: redis://redis:6379/0
+      AUTH_TOKEN: change-me
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_FROM: noreply@aetherius.local
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+      - mailpit
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/aetherius
+      REDIS_URL: redis://redis:6379/0
+      AUTH_TOKEN: change-me
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_FROM: noreply@aetherius.local
+    depends_on:
+      - db
+      - redis
+      - mailpit
+    command: celery -A app.workers.celery_app.celery_app worker -l info -Q ingestion,signal,briefing,delivery
+
+  beat:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/aetherius
+      REDIS_URL: redis://redis:6379/0
+      AUTH_TOKEN: change-me
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_FROM: noreply@aetherius.local
+    depends_on:
+      - db
+      - redis
+      - mailpit
+    command: celery -A app.workers.celery_app.celery_app beat -l info
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: aetherius
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
