@@ -1,0 +1,9 @@
+<!doctype html>
+<html><body>
+<h1>Watchlist Items</h1>
+<ul>
+{% for i in items %}
+  <li>{{ i.ticker }} - {{ i.company_name }} ({{ i.priority_level }})</li>
+{% endfor %}
+</ul>
+</body></html>

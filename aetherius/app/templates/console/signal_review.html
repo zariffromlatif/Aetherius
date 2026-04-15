@@ -1,0 +1,15 @@
+<!doctype html>
+<html><body>
+<h1>Signal Review Queue</h1>
+<table border="1" cellpadding="6">
+  <tr><th>Run</th><th>Status</th><th>Type</th><th>Actions</th></tr>
+  {% for r in runs %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.status }}</td>
+    <td>{{ r.run_type }}</td>
+    <td>approve / edit / suppress via /api/v1/review/briefings/{{ r.id }}/action</td>
+  </tr>
+  {% endfor %}
+</table>
+</body></html>

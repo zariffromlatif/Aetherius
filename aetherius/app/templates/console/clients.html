@@ -1,0 +1,9 @@
+<!doctype html>
+<html><body>
+<h1>Clients</h1>
+<ul>
+{% for c in clients %}
+  <li><a href="/api/v1/console/clients/{{ c.id }}">{{ c.name }}</a></li>
+{% endfor %}
+</ul>
+</body></html>

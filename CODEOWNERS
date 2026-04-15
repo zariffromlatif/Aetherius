@@ -1,0 +1,15 @@
+# Default owners for all files
+* @zariffromlatif
+
+# Core simulation ownership
+/core/ @zariffromlatif
+/orchestrator.py @zariffromlatif
+/simulations/ @zariffromlatif
+
+# Operational backend ownership
+/aetherius/ @zariffromlatif
+
+# Governance and policy docs
+/README.md @zariffromlatif
+/OPEN_SOURCE_POLICY.md @zariffromlatif
+/SECURITY.md @zariffromlatif

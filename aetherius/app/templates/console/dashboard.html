@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Aetherius Operator Dashboard</h1>
+    <ul>
+      <li>Pending Review: {{ pending_review }}</li>
+      <li>Failed Deliveries: {{ failed_deliveries }}</li>
+      <li>Open Signals: {{ open_signals }}</li>
+    </ul>
+    <h2>Recent Observations</h2>
+    <ul>
+      {% for obs in recent_observations %}
+      <li>{{ obs.source_name }} - {{ obs.title or "untitled" }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
