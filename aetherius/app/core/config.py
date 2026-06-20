@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     smtp_use_tls: bool = False
     openai_api_key: str | None = None
     openai_model: str = "gpt-4o-mini"
+    sec_user_agent: str = "Aetherius Research zarif.latif.biz@gmail.com"
     auth_token: str = "change-me"
     jwt_secret: str = "change-me-jwt"
     jwt_algorithm: str = "HS256"
