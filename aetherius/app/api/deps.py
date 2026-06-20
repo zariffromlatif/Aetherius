@@ -30,9 +30,17 @@ def require_admin(claims: dict = Depends(require_operator)) -> dict:
     return claims
 
 
-def require_client_scope(client_id: str, claims: dict = Depends(require_operator), x_client_scope: str = Header(default="")) -> dict:
+def require_client_scope(client_id: str, claims: dict = Depends(require_operator)) -> dict:
+    # Authority is derived from the authenticated operator, never from a
+    # client-supplied header. Admins may act across all clients.
+    #
+    # NOTE: This is correct for a single trusted operator team. When outside
+    # analysts are onboarded, replace the role check below with a lookup
+    # against an operator_client_assignments table (operator_id, client_id)
+    # and verify membership here.
     if claims.get("role") == "admin":
         return claims
-    if x_client_scope != client_id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Client scope mismatch")
-    return claims
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Cross-client action requires admin role",
+    )
