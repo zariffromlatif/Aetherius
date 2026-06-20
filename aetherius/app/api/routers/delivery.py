@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
-from fastapi import Header, HTTPException
+from fastapi import HTTPException
 
 from app.api.deps import get_db, require_operator
 from app.models.entities import BriefingRuns, Deliveries
@@ -21,12 +21,13 @@ def deliver_briefing_endpoint(
     briefing_run_id: str,
     payload: DeliveryRequest,
     claims: dict = Depends(require_operator),
-    x_client_scope: str = Header(default=""),
     db: Session = Depends(get_db),
 ):
     run = db.query(BriefingRuns).filter(BriefingRuns.id == briefing_run_id).one()
-    if claims.get("role") != "admin" and x_client_scope != str(run.client_id):
-        raise HTTPException(status_code=403, detail="Client scope mismatch")
+    # Sending a client's brief is an admin-only action. Non-admins cannot
+    # deliver across clients (no spoofable header).
+    if claims.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Delivery requires admin role")
     return deliver_briefing(db, briefing_run_id=briefing_run_id, recipient=payload.recipient, channel=payload.channel)
 
 

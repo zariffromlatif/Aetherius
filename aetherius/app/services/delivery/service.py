@@ -6,7 +6,6 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.orm import Session
-from weasyprint import HTML
 
 from app.core.config import settings
 from app.models.entities import BriefingEvidenceRefs, BriefingItems, BriefingRuns, Deliveries
@@ -28,6 +27,8 @@ def render_pdf_html(briefing_run: BriefingRuns, items: list[BriefingItems]) -> s
 
 
 def render_pdf_bytes(briefing_run: BriefingRuns, items: list[BriefingItems]) -> bytes:
+    from weasyprint import HTML
+
     html = render_pdf_html(briefing_run, items)
     return HTML(string=html).write_pdf()
 
