@@ -51,15 +51,20 @@ async def _crawl_target(url: str) -> tuple[str, str]:
         return "", f"crawl4ai crawl failed: {exc}"
 
 
-def forage() -> ForageResult:
-    """Forage target pages using Crawl4AI, with deterministic fallback."""
+async def forage_async() -> ForageResult:
+    """Forage target pages using Crawl4AI, with deterministic fallback.
+
+    Targets are crawled concurrently. This is the async core; callers in a
+    synchronous context should use ``forage()``.
+    """
     started_at = datetime.now(timezone.utc)
     chunks: list[ForageChunk] = []
     dropped = 0
     errors: list[str] = []
 
-    for url, title in TARGETS:
-        content, error = asyncio.run(_crawl_target(url))
+    crawl_results = await asyncio.gather(*(_crawl_target(url) for url, _ in TARGETS))
+
+    for (url, title), (content, error) in zip(TARGETS, crawl_results):
         if error:
             errors.append(f"{title}: {error}")
             content = (
@@ -90,3 +95,12 @@ def forage() -> ForageResult:
         dropped_chunks=dropped,
         errors=errors,
     )
+
+
+def forage() -> ForageResult:
+    """Synchronous entry point for non-async callers.
+
+    Must NOT be called from within a running event loop (it would raise
+    ``RuntimeError``). Async callers should ``await forage_async()`` directly.
+    """
+    return asyncio.run(forage_async())

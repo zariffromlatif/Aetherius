@@ -11,6 +11,10 @@ def make_content_hash(raw_text: str) -> str:
 
 
 def compute_freshness(observed_at: datetime) -> float:
+    # Tolerate naive datetimes by assuming UTC, so a single naive caller cannot
+    # raise "can't subtract offset-naive and offset-aware datetimes".
+    if observed_at.tzinfo is None:
+        observed_at = observed_at.replace(tzinfo=timezone.utc)
     age_hours = max((datetime.now(timezone.utc) - observed_at).total_seconds() / 3600, 0.0)
     return max(0.0, min(1.0, 1.0 - (age_hours / 72.0)))
 

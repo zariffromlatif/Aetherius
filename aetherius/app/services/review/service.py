@@ -21,7 +21,11 @@ def set_review_action(
     elif action_type == "suppress":
         run.status = "suppressed"
     elif action_type == "resend":
-        run.status = "approved"
+        # A resend re-triggers delivery of an already-finalized run; it must not
+        # rewind the run's status (e.g. "sent" -> "approved"), which would make
+        # the brief reappear in the review queue as if unapproved. The resend is
+        # captured in OperatorActions below for the audit trail.
+        pass
     elif action_type == "edit":
         run.version = run.version + 1
     else:

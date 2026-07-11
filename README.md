@@ -1,172 +1,107 @@
-# Aetherius
+# Aetherius Risk Intelligence
 
-**A production-ready watchlist risk intelligence platform with an emerging causal world-model research core.**
+**Backtest-validated downside-risk screens for concentrated public-equity books.**
 
 ![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Status: Pilot Ready](https://img.shields.io/badge/Status-Pilot%20Ready-success)
-![Model: Open Core](https://img.shields.io/badge/Model-Open%20Core-informational)
+![Status: In Development](https://img.shields.io/badge/Status-In%20Development-informational)
 
-Aetherius combines a pilot-ready risk operations backend with a top-level causal simulation stack:
+Aetherius produces per-target Stress-Test Decks: 8–15 page PDFs that map a public-equity target's counterparties and funding sources, timeline the 90 days of filings and news scored by severity, and disclose the pipeline's historical detection track record on structurally comparable names.
 
-- **Sensory Core** (`core/sensory_forager.py`) for high-entropy market context foraging
-- **Causal Brain** (`core/causal_brain.py`) for state construction and shock simulation
-- **Response Engine** (`core/response_engine.py`) for strict A-E Risk Decision Logs
-- **Master Orchestrator** (`orchestrator.py`) for resilient 24/7 async operation
+Positioning: *"Backtest-validated downside-risk screens. Detection timing disclosed on the cover page, not asserted in marketing."*
 
-## Who This Is For
+## Who it is for
 
-- Small hedge funds and family offices running concentrated watchlists
-- Operators who need evidence-backed downside surveillance, not generic AI commentary
-- Teams that want human-supervised delivery with clear auditability
+- Search funds and independent sponsors doing pre-LOI diligence on public comps
+- Small and mid family offices ($100M–$1B AUM) running concentrated books
+- Litigation-finance analysts and small credit funds
+- Single-name activist funds and concentrated PMs
+- Asset-based lenders assessing borrower counterparty risk
 
 ## What Aetherius Is (and Is Not)
 
-- **Is:** an event-driven risk surveillance and decision-support workflow
-- **Is:** an open-core system with reproducible replay and validation evidence
-- **Is not:** autonomous investment execution or guaranteed return forecasting
+- **Is:** an evidence-backed risk screening and reporting workflow
+- **Is:** a historical detection-timing pipeline with pinned backtests
+- **Is not:** autonomous investment execution or a return forecast
 - **Is not:** investment advice
 
-## Why It Is Different
-
-- Causal shock simulation over a graph-enhanced state (`S_t -> S_{t+1}`)
-- Structured A-E Risk Decision Logs with explicit invalidation markers
-- Built-in prompt-cache economics and token telemetry for cost control
-- Operator review gates before client-visible outputs
-
-## Core Framing
-
-$$
-S_{t+1} \sim T(S_t, A_t, \omega)
-$$
-
-Where:
-
-- \(S_t\): current graph-enhanced market belief state
-- \(A_t\): causal intervention (shock) applied at time \(t\)
-- \(\omega\): latent uncertainty factors
-- \(T(\cdot)\): transition dynamics mapping current state and intervention to next state
-
-## Repository Highlights
+## The pipeline
 
 ```text
-/core
-  sensory_forager.py
-  causal_brain.py
-  response_engine.py
-  optimizer.py
+aetherius/app/services/
+  ingestion/
+    edgar_adapter.py      # SEC EDGAR filings (8-K, 10-Q, 10-K, ...)
+    gdelt_adapter.py      # Real news headlines via GDELT (in progress)
+  entity_mapping/          # Word-boundary regex + acronym stoplist
+  scoring/                 # Deterministic 7-factor risk formula
+  signals/                 # 15-type downside signal taxonomy
+  reporting/               # Deck data assembly
+  delivery/                # PDF render + disclaimer & banned-language gates
+  review/                  # Human review gate before client delivery
 
-/simulations
-  run_replay.py
-  replay_rate_hike_2026.md
-  replay_vix_shock.md
-  sample_risk_decision_log.md
-
-/docs
-  mathematical_foundations.md
-  benchmark_spec.md
-  deployment_guide.md
+simulations/backtest/      # Historical detection-timing proofs
+  events/svb-2023/         # Frozen fixture: SVB regional-bank contagion
+  run_backtest.py          # Replay harness (uses production match + scoring)
 ```
 
-## Quick Start
-
-1. Install dependencies:
+## Quick start
 
 ```bash
 pip install -r requirements.txt
+pytest aetherius/tests
 ```
 
-2. Run a replay:
+To run the SVB-2023 backtest:
 
 ```bash
-python simulations/run_replay.py --shock-id shock-rate-50
+python simulations/backtest/run_backtest.py --event svb-2023
 ```
 
-3. Run orchestrator loop:
+To build a Target Stress-Test Deck for a ticker (fixture mode, fully offline):
 
 ```bash
-python orchestrator.py
+python scripts/build_deck.py \
+  --ticker SIVB --name "SVB Financial Group" \
+  --sector "Regional Banks" --aliases "Silicon Valley Bank,SVB" \
+  --thesis "Concentrated regional-bank position with rate-sensitive HTM book." \
+  --counterparty "FRC:First Republic Bank:peer:0.6:First Republic" \
+  --window 2023-03-06:2023-03-12 \
+  --fixture-jsonl simulations/backtest/events/svb-2023/observations.jsonl \
+  --out sivb-deck.html
 ```
 
-## Proof and Validation
+Open the resulting HTML in a browser and use **File → Print → Save as PDF** to produce the deliverable PDF. For a live pull against GDELT for a real target, replace `--fixture-jsonl PATH` with `--live`.
 
-- Replay runner: `simulations/run_replay.py`
-- Validation runbook: `docs/completion_validation_runbook.md`
-- Benchmark protocol: `docs/benchmark_spec.md`
-- Evidence packs: `simulations/validation/`
+## Detection track record
 
-## Prompt Cache and Telemetry
+The pipeline's honest metrics are disclosed on every engagement. Three frozen historical events, each replayed against real primary-source news from the GDELT archive:
 
-- 24h prompt-cache store is persisted to `.aetherius_prompt_cache.json`.
-- Each shock result logs:
-  - `cache_hit`
-  - `cache_key`
-  - `token_spend_estimate`
-- `aetherius_system.log` captures run-level cache-hit ratios and token-spend estimates.
+| Event | Watchlist | Recall | Median lead | False positives on control |
+|---|---|---|---|---|
+| **SVB-2023** — regional-bank contagion (Mar 6–12) | 5 affected + 1 control (MSFT) | **5 / 5 (100%)** | **2.34 days** | **0** |
+| **Wirecard-2020** — accounting fraud + insolvency (Jun 15–30) | 1 affected + 1 control (DTE) | **1 / 1 (100%)** | **6.60 days** | **0** |
+| **FTX-2022** — crypto counterparty contagion (Nov 2–14) | 3 affected + 1 control (MSFT) | **3 / 3 (100%)** | **7.12 days** | **0** |
 
-## TTC Provider Integration
+Full methodology, watchlists, ground-truth files, GDELT observation corpora, and pinned tests are published in `simulations/backtest/events/` and `aetherius/tests/test_backtest_harness.py`.
 
-The causal brain supports OpenAI-compatible test-time compute calls on cache misses.
+The full write-up is in `docs/working_paper/detection_timing_backtest_2026-07.md`.
 
-Environment variables:
+**Anti-hype note.** Detection-timing evidence on frozen historical windows. Not a return forecast. Not a guarantee of future results.
 
-- `AETHERIUS_ENABLE_TTC=true|false` (default: true)
-- `AETHERIUS_MODEL_NAME=<model>` (default: `gpt-4o-mini`)
-- `AETHERIUS_API_KEY=<provider_api_key>`
-- `AETHERIUS_API_BASE_URL=<openai_compatible_base_url>` (default: `https://api.openai.com/v1`)
-- `AETHERIUS_API_TIMEOUT_SECONDS=45`
+## Engagements
 
-If provider calls fail or keys are missing, Aetherius safely falls back to deterministic local simulation.
+Per-target Stress-Test Decks are priced per engagement. See the landing page at `landing_page/index.html` or email `zarif.latif.biz@gmail.com`.
 
-## Supporting Backend
+## Repository policy
 
-The existing modular monolith backend remains under `aetherius/` (API, DB models, delivery, review workflows) and is used to enrich core graph state with watchlist/evidence context.
+- Root `README.md` is the canonical project entry point.
+- `aetherius/README.md` covers backend implementation details.
+- `archive/` retains deprecated files from an earlier "causal simulation" positioning that was walked back. Do not import from it.
+- Generated runtime outputs (`simulations/artifacts/`, logs) are ephemeral.
 
-## Repository Ownership Map
+## License
 
-This repository intentionally has two implementation layers:
-
-- **Research and simulation layer (root):** `core/`, `orchestrator.py`, and `simulations/`
-  - Purpose: causal state-transition experimentation, replay proofs, and cost/cache telemetry.
-- **Operational delivery layer (`aetherius/`):**
-  - Purpose: API, data model, review console, queues, rendering, and delivery workflows for pilot operation.
-
-Contributor rule of thumb:
-- If the change affects shock simulation, pathways, or replay outputs, start in root `core/` and `simulations/`.
-- If the change affects auth, watchlists, review actions, or client-facing delivery, start in `aetherius/app/`.
-
-## Documentation
-
-- `docs/mathematical_foundations.md`
-- `docs/benchmark_spec.md`
-- `docs/README_replay_case_studies.md`
-- `docs/deployment_guide.md`
-
-## Repository Hygiene Policy
-
-To keep Aetherius showcase-ready:
-
-- Treat generated runtime outputs as ephemeral (`simulations/artifacts/`, `.aetherius_prompt_cache.json`, logs).
-- Keep only canonical implementations (for example, `core/` modules) and remove legacy duplicate scripts.
-- Move internal planning/business drafts to a private workspace or `archive/` branch instead of main.
-- Keep root-level docs focused on reproducible technical evidence and deployment clarity.
-- Keep `aetherius/README.md` as backend-scope documentation; keep root `README.md` as the canonical project entry point.
-
-## License and Commercial Offering
-
-Aetherius is licensed under the Apache License 2.0 (`LICENSE`).
-
-Open-source scope:
-- Core simulation and replay framework
-- Research and benchmark documentation
-- Community contribution workflow
-
-Commercial/managed scope:
-- Managed pilot operations and support
-- Customer-specific onboarding and workflows
-- Private deployment, monitoring, and SLA process layers
-
-This open-core model is designed to keep the technical foundation transparent while allowing a managed pilot service for production users.
+Apache License 2.0. See `LICENSE`.
 
 ## Disclaimer
 
-Aetherius is a decision-support workflow and research framework. It does not guarantee investment outcomes or performance.
+Aetherius Risk Intelligence provides research and risk-monitoring services. Analysis is not investment advice and is not a recommendation to buy, sell, or hold any security. Nothing herein is a forecast or a guarantee of any outcome.

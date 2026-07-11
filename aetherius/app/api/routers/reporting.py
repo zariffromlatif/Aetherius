@@ -18,12 +18,12 @@ class FeedbackCreate(BaseModel):
 
 
 @router.get("/weekly/{client_id}")
-def weekly_summary_endpoint(client_id: str, db: Session = Depends(get_db)):
+def weekly_summary_endpoint(client_id: str, _claims: dict = Depends(require_client_scope), db: Session = Depends(get_db)):
     return build_weekly_summary(db, client_id)
 
 
 @router.get("/pilot/{client_id}")
-def pilot_report_endpoint(client_id: str, db: Session = Depends(get_db)):
+def pilot_report_endpoint(client_id: str, _claims: dict = Depends(require_client_scope), db: Session = Depends(get_db)):
     return build_pilot_report(db, client_id)
 
 

@@ -31,6 +31,10 @@ Thumbs.db
 # Generated replay artifacts
 simulations/artifacts/
 
+# Per-target GDELT cache used by simulations/backtest/build_fixture.py.
+# The rebuilt observations.jsonl IS committed; the cache is a build artifact.
+simulations/backtest/events/*/_gdelt_cache/
+
 # Build artifacts
 dist/
 build/

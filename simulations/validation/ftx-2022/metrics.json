@@ -1,0 +1,61 @@
+{
+  "event_id": "ftx-2022",
+  "event_name": "FTX collapse and crypto counterparty contagion (November 2022)",
+  "commit": "rebuild-gdelt-v3",
+  "dataset_window": {
+    "start": "2022-11-02T00:00:00Z",
+    "end": "2022-11-14T23:59:59Z"
+  },
+  "observation_count": 49,
+  "watchlist_size": 4,
+  "affected_count": 3,
+  "control_count": 1,
+  "detection_recall": 1.0,
+  "detections_reaching_expected_severity": 3,
+  "mapping_precision": 1.0,
+  "false_positive_tickers": [],
+  "false_positive_count": 0,
+  "median_lead_time_hours": 171.0,
+  "median_lead_time_days": 7.12,
+  "detections": [
+    {
+      "ticker": "COIN",
+      "first_flag_at": "2022-11-03T21:00:00Z",
+      "realized_event_date": "2022-11-11T00:00:00Z",
+      "lead_time_hours": 171.0,
+      "lead_time_days": 7.12,
+      "first_flag_severity": "high",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "Why Coinbase , Silvergate Capital , and Marathon Digital Holdings Are Falling This Week",
+      "evidence_source": "fool.com"
+    },
+    {
+      "ticker": "SBNY",
+      "first_flag_at": "2022-11-10T11:00:00Z",
+      "realized_event_date": "2022-11-11T00:00:00Z",
+      "lead_time_hours": 13.0,
+      "lead_time_days": 0.54,
+      "first_flag_severity": "elevated",
+      "peak_severity": "elevated",
+      "reached_expected_severity": true,
+      "evidence_title": "Robinhood , Coinbase Distance Themselves from FTX After Crypto Plunge",
+      "evidence_source": "marketwatch.com"
+    },
+    {
+      "ticker": "SI",
+      "first_flag_at": "2022-11-03T21:00:00Z",
+      "realized_event_date": "2022-11-11T00:00:00Z",
+      "lead_time_hours": 171.0,
+      "lead_time_days": 7.12,
+      "first_flag_severity": "high",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "Why Coinbase , Silvergate Capital , and Marathon Digital Holdings Are Falling This Week",
+      "evidence_source": "fool.com"
+    }
+  ],
+  "misses": [],
+  "shippable_flag_count": 5,
+  "anti_hype_note": "Measures detection timing and ranking on a frozen historical window. This is early-detection and prioritization evidence, NOT a return forecast or guarantee. Causal-mechanism confidence is not claimed here."
+}

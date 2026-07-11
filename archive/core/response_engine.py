@@ -15,9 +15,9 @@ def _render_pathways(pathways: list[ScenarioPath]) -> str:
 
 def build_risk_decision_log(run_id: str, result: ShockResult, evidence_refs: list[str]) -> RiskDecisionLog:
     actions = [
-        "Review hedge overlays for names with refinancing exposure.",
-        "Re-rank watchlist names with weak pricing power.",
-        "Escalate high-urgency names to same-day operator review.",
+        "Evaluate supply chain redundancies for target company.",
+        "Flag high-risk exposure to integration timeline.",
+        "Require further due diligence on working capital buffers.",
     ]
     return RiskDecisionLog(
         run_id=run_id,
@@ -39,7 +39,7 @@ def to_markdown(log: RiskDecisionLog) -> str:
     invalidation = "\n".join(f"- {m}" for m in log.invalidation_markers)
     evidence = "\n".join(f"- {e}" for e in log.evidence_refs) if log.evidence_refs else "- No explicit refs attached"
 
-    return f"""# Aetherius Risk Decision Log
+    return f"""# Aetherius M&A Target Stress-Test Report
 
 Run ID: `{log.run_id}`
 

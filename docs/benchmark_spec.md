@@ -9,7 +9,7 @@ Establish a reproducible benchmark framework across four dimensions:
 1. Ingestion and mapping quality
 2. Signal and briefing quality
 3. Production reliability and latency
-4. Unit economics and research-track causal simulation quality
+4. Unit economics
 
 ## 2) Benchmark Principles
 
@@ -82,15 +82,8 @@ Establish a reproducible benchmark framework across four dimensions:
 
 16. **Cost per 100 Observations**
 17. **Cost per Sent Brief**
-18. **Prompt/Cache Hit Rate** (for optimizer module when enabled)
+18. **Prompt/Cache Hit Rate** (for LLM assist paths when enabled)
 19. **Compute Time per End-to-End Run**
-
-### E) Causal World-Model (Research Track)
-
-20. **Transition Forecast Calibration**
-21. **Scenario Ranking Accuracy** (base/bear/bull ordering quality)
-22. **Causal Link Precision** (expert-reviewed)
-23. **Counterfactual Consistency Score**
 
 ## 5) Ground Truth Policy
 
@@ -107,7 +100,7 @@ Adjudication rubric must be versioned and shared with benchmark outputs.
 ### 6.1 Offline Replay Mode
 
 - Run pipeline on frozen historical windows.
-- Measure ranking, lead-time, and causal-research metrics.
+- Measure ranking, lead-time, and false-positive metrics.
 
 ### 6.2 Shadow Mode (Live)
 
@@ -168,7 +161,7 @@ Store artifacts for audit:
 - Separate clearly:
   - early detection
   - high-priority ranking
-  - causal mechanism confidence
+  - false-positive control on non-affected names
 - Publish uncertainty and known failure modes.
 
 ## 11) Versioning

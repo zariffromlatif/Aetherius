@@ -1,0 +1,69 @@
+{
+  "watchlist_name": "Regional Banks Concentrated Book (backtest fixture)",
+  "as_of": "2023-03-06",
+  "notes": "Synthetic concentrated regional-bank book used to backtest detection timing on the March 2023 SVB collapse. Tickers and relationships reflect the real cohort affected. MSFT is included as a non-bank control to pressure-test false positives.",
+  "items": [
+    {
+      "ticker": "SIVB",
+      "company_name": "SVB Financial Group",
+      "sector": "Regional Banks",
+      "priority_level": "critical",
+      "book_context": "Largest position; core banking relationship to the venture ecosystem.",
+      "aliases": ["Silicon Valley Bank", "SVB"],
+      "relationships": []
+    },
+    {
+      "ticker": "SBNY",
+      "company_name": "Signature Bank",
+      "sector": "Regional Banks",
+      "priority_level": "high",
+      "book_context": "Crypto-adjacent deposit base; peer to SVB.",
+      "aliases": ["Signature Bank"],
+      "relationships": [
+        {"related_entity_name": "Silicon Valley Bank", "related_ticker": "SIVB", "relationship_type": "peer", "strength": 0.6}
+      ]
+    },
+    {
+      "ticker": "FRC",
+      "company_name": "First Republic Bank",
+      "sector": "Regional Banks",
+      "priority_level": "high",
+      "book_context": "High share of uninsured deposits; rate-sensitive HTM book.",
+      "aliases": ["First Republic"],
+      "relationships": [
+        {"related_entity_name": "Silicon Valley Bank", "related_ticker": "SIVB", "relationship_type": "peer", "strength": 0.6}
+      ]
+    },
+    {
+      "ticker": "WAL",
+      "company_name": "Western Alliance Bancorporation",
+      "sector": "Regional Banks",
+      "priority_level": "normal",
+      "book_context": "Regional peer with concentrated commercial deposits.",
+      "aliases": ["Western Alliance"],
+      "relationships": [
+        {"related_entity_name": "Silicon Valley Bank", "related_ticker": "SIVB", "relationship_type": "peer", "strength": 0.55}
+      ]
+    },
+    {
+      "ticker": "PACW",
+      "company_name": "PacWest Bancorp",
+      "sector": "Regional Banks",
+      "priority_level": "normal",
+      "book_context": "Smaller regional peer; venture and tech deposit exposure.",
+      "aliases": ["PacWest"],
+      "relationships": [
+        {"related_entity_name": "Silicon Valley Bank", "related_ticker": "SIVB", "relationship_type": "peer", "strength": 0.55}
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "company_name": "Microsoft Corporation",
+      "sector": "Software",
+      "priority_level": "normal",
+      "book_context": "Non-bank control position. Should NOT be flagged by bank-sector stress.",
+      "aliases": ["Microsoft"],
+      "relationships": []
+    }
+  ]
+}

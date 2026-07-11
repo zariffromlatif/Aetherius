@@ -1,57 +1,36 @@
-# Simulations and Replay Runner
+# Simulations
 
-This folder is the Aetherius proof stack for historical replay and decision-log artifacts.
+This folder contains the historical detection-timing backtests that anchor Aetherius' credibility.
 
 ## Contents
 
-- `run_replay.py` - CLI runner for a single replay.
-- `replay_rate_hike_2026.md` - documented case study template instance.
-- `replay_vix_shock.md` - documented volatility shock replay.
-- `replay_credit_spread_blowout.md` - third high-fidelity replay for spread-stress scenarios.
-- `sample_risk_decision_log.md` - canonical A-E output format.
-- `artifacts/` - generated outputs (ignored by git).
-- `validation/` - evidence pack template for completion signoff.
+- `backtest/` — the honest asset: pinned historical events with real observations, ground truth, and a replay harness that uses the production entity-mapping and scoring code.
+- `validation/` — completion-signoff evidence for individual events.
+- `artifacts/` — generated outputs (git-ignored).
 
-## Run a Replay
+## Running a backtest
 
 From repo root:
 
 ```bash
-python simulations/run_replay.py --shock-id shock-rate-50
+python simulations/backtest/run_backtest.py --event svb-2023
 ```
 
-Optional client-scoped and time-window run:
+Each event directory (`simulations/backtest/events/<event-id>/`) contains:
 
-```bash
-python simulations/run_replay.py \
-  --shock-id shock-supply \
-  --client-id <CLIENT_UUID> \
-  --window-start 2026-01-15T09:00:00Z \
-  --window-end 2026-01-15T16:00:00Z
-```
+- `watchlist.json` — the concentrated book being surveilled, plus at least one non-affected control name for false-positive testing
+- `ground_truth.json` — the realized event date(s) and expected severity per ticker
+- `observations.jsonl` — real primary-source observations from GDELT, SEC EDGAR, Wayback, or other archives (never hand-authored)
 
-## Output Artifacts
+The harness scores each observation with the production `entity_mapping/service.py` + `scoring/service.py`, and reports:
 
-Each run writes to:
+- detection recall (fraction of affected names flagged elevated / high before the realized event)
+- median lead time (hours between first flag and realized event)
+- false positives on the control name
+- per-ticker detection detail
 
-`simulations/artifacts/<run_id>/`
+See the SVB-2023 fixture for the reference format.
 
-- `<shock_id>.md` - Risk Decision Log (A-E format)
-- `<shock_id>.metrics.json` - benchmark-style metrics payload
+## Anti-hype note
 
-## Metrics Interpretation
-
-Key fields in `*.metrics.json`:
-
-- `state_metadata.watchlist_items` - how many scoped watchlist items were included in graph state.
-- `forage_chunks` and `forage_dropped_chunks` - ingestion/semantic-filter signal.
-- `risk_score`, `urgency_score`, `confidence` - replay simulation outputs.
-- `evidence_ref_count` and `evidence_refs` - linked evidence traceability.
-- `quality_flags` - output shape and minimum quality checks.
-
-Use these artifacts alongside:
-
-- `docs/benchmark_spec.md`
-- `docs/README_replay_case_studies.md`
-
-to produce reproducible, non-hyped replay reports.
+These are early-detection and prioritization proofs on frozen historical windows. Not return forecasts. Not guarantees of future results. Causal-mechanism confidence is not claimed.

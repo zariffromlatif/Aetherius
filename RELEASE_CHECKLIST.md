@@ -29,16 +29,17 @@ Use this checklist before making the repository public.
 
 - [ ] CI workflow exists and runs lint/tests.
 - [ ] Local smoke check passes:
-  - [ ] Replay run (`python simulations/run_replay.py --shock-id shock-rate-50`)
+  - [ ] Test suite passes (`pytest aetherius/tests`)
+  - [ ] SVB-2023 backtest passes (`python simulations/backtest/run_backtest.py --event svb-2023`)
   - [ ] Key docs render cleanly in Markdown preview
 - [ ] No broken links in README/docs.
 
 ## 5) Public Positioning
 
 - [ ] README clearly states what Aetherius is and is not.
-- [ ] README includes open-core scope and managed/commercial boundary.
 - [ ] Disclaimer is present (not investment advice, no guaranteed outcomes).
-- [ ] Validation evidence references are current (`simulations/validation/...`).
+- [ ] Detection track record references are current (`simulations/backtest/events/...`).
+- [ ] No causal-simulation language in README, landing page, or outbound copy — the honest artifact is detection-timing, not causal inference.
 
 ## 6) GitHub Launch Steps
 

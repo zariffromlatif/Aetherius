@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from core.causal_brain import run_shock_suite, construct_state
 from core.response_engine import build_risk_decision_log, to_markdown
-from core.sensory_forager import forage
+from core.sensory_forager import forage_async
 
 RUN_INTERVAL_SECONDS = int(os.getenv("AETHERIUS_LOOP_SECONDS", "21600"))  # 6 hours
 RISK_THRESHOLD = float(os.getenv("AETHERIUS_RISK_THRESHOLD", "0.70"))
@@ -112,7 +112,7 @@ async def _run_once() -> None:
         },
     )
 
-    forage_result = forage()
+    forage_result = await forage_async()
     _log(
         "forage_completed",
         {
@@ -185,7 +185,7 @@ async def _run_once() -> None:
 
         if MODE == "autonomous_research" and RECIPIENT:
             _send_email(
-                subject=f"Aetherius Risk Decision Log [{result.shock.name}]",
+                subject=f"Aetherius M&A Stress-Test Report [{result.shock.name}]",
                 body=markdown,
                 recipient=RECIPIENT,
             )

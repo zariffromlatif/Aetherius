@@ -1,0 +1,19 @@
+{
+  "event_id": "wirecard-2020",
+  "event_name": "Wirecard AG accounting fraud disclosure and insolvency (June 2020)",
+  "window_start": "2020-06-15T00:00:00Z",
+  "window_end": "2020-06-30T23:59:59Z",
+  "description": "On 2020-06-18 Wirecard AG (WDI) disclosed that EUR 1.9 billion in cash reported on its balance sheet 'likely does not exist'; the CEO resigned the next day. The company filed for insolvency on 2020-06-25, wiping out equity holders. This was accounting-fraud-specific, not sector-wide: peers such as Adyen and PayPal were not materially affected on the window.",
+  "primary_sources": [
+    "Wirecard AG ad-hoc release, 2020-06-18: statement that EUR 1.9B in trust-account cash 'likely does not exist'.",
+    "BaFin statements, 2020-06-18 to 2020-06-25.",
+    "Wirecard AG insolvency filing at Munich District Court, 2020-06-25."
+  ],
+  "provenance_note": "News observations pulled from GDELT DOC 2.0 for the window; regulatory anchors sourced from Wirecard AG's own disclosures and BaFin releases.",
+  "affected": [
+    {"ticker": "WDI", "realized_event_date": "2020-06-25T00:00:00Z", "expected_min_severity": "high", "realized_event": "Insolvency filing 2020-06-25; common equity effectively wiped out."}
+  ],
+  "controls_should_not_flag": [
+    {"ticker": "DTE", "reason": "Non-fintech DAX name; unrelated to Wirecard-specific fraud. Elevated/high flag would be a false positive."}
+  ]
+}

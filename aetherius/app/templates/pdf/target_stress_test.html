@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aetherius Target Stress-Test Deck &middot; {{ cover.target_ticker }}</title>
+<style>
+  @page {
+    size: Letter;
+    margin: 20mm 18mm 18mm 18mm;
+    @bottom-center {
+      content: "Aetherius Risk Intelligence   \\A0\\A0\\A0   " counter(page) " / " counter(pages);
+      font-family: 'Georgia', serif;
+      font-size: 8.5pt;
+      color: #7a6a4a;
+    }
+  }
+
+  html { font-size: 11pt; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #1a1a1a;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ------------------------------------------------------------------
+   * Cover page
+   * ------------------------------------------------------------------ */
+  .cover {
+    height: 232mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+    border-top: 6px solid #b8893a;
+    padding-top: 24mm;
+  }
+  .cover .brand {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 12pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #14161e;
+  }
+  .cover .brand span { color: #b8893a; }
+  .cover h1 {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 32pt;
+    line-height: 1.15;
+    margin: 8mm 0 6mm 0;
+    color: #14161e;
+  }
+  .cover .subject {
+    font-size: 15pt;
+    color: #4a4030;
+    margin-bottom: 20mm;
+  }
+  .cover-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8mm 14mm;
+    padding: 8mm 0 12mm 0;
+    border-top: 1px solid #d8d3c8;
+    border-bottom: 1px solid #d8d3c8;
+  }
+  .cover-facts .k {
+    font-size: 8.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a6a4a;
+    margin-bottom: 1.5mm;
+  }
+  .cover-facts .v {
+    font-size: 13pt;
+    color: #14161e;
+  }
+  .cover-footnote {
+    font-size: 8.5pt;
+    color: #7a6a4a;
+    max-width: 130mm;
+    line-height: 1.5;
+  }
+
+  /* ------------------------------------------------------------------
+   * Section shell
+   * ------------------------------------------------------------------ */
+  h2.section {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 18pt;
+    color: #14161e;
+    border-bottom: 1px solid #d8d3c8;
+    padding-bottom: 2mm;
+    margin: 0 0 6mm 0;
+  }
+  .eyebrow {
+    font-size: 8.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b8893a;
+    margin-bottom: 1mm;
+  }
+  section {
+    page-break-inside: avoid;
+    margin-bottom: 12mm;
+  }
+  section.new-page {
+    page-break-before: always;
+  }
+  p { margin: 0 0 3.5mm 0; }
+  ul { margin: 0 0 3.5mm 0; padding-left: 5mm; }
+  li { margin-bottom: 2mm; }
+  strong { color: #14161e; }
+  em { color: #4a4030; font-style: italic; }
+  a { color: #14161e; text-decoration: none; border-bottom: 0.5pt solid #d5b976; word-break: break-word; }
+  code { font-family: 'Consolas', 'Menlo', monospace; font-size: 9pt; background: #f2ecdc; padding: 0.5mm 1.5mm; border-radius: 1pt; }
+
+  /* ------------------------------------------------------------------
+   * Metric tiles
+   * ------------------------------------------------------------------ */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3mm;
+  }
+  .metric {
+    border: 1px solid #d8d3c8;
+    padding: 3.5mm 3mm 3mm 3mm;
+    background: #fbf7ec;
+  }
+  .metric .k {
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a6a4a;
+    margin-bottom: 1mm;
+  }
+  .metric .v {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 17pt;
+    color: #14161e;
+    line-height: 1.05;
+  }
+  .metric .v .unit { font-size: 10pt; color: #7a6a4a; margin-left: 1mm; }
+
+  /* ------------------------------------------------------------------
+   * Tables (dependency map, timeline, top evidence)
+   * ------------------------------------------------------------------ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 8.5pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #7a6a4a;
+    padding: 2mm 2mm 2mm 0;
+    border-bottom: 1px solid #d8d3c8;
+  }
+  td {
+    padding: 2.5mm 2mm 2.5mm 0;
+    border-bottom: 1px solid #ede7d3;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: 0; }
+  .severity-high { color: #7a1a1a; font-weight: 600; }
+  .severity-elevated { color: #b8893a; font-weight: 600; }
+  .severity-moderate { color: #4a4030; }
+  .severity-low { color: #7a6a4a; }
+  .mono { font-family: 'Consolas', 'Menlo', monospace; font-size: 9pt; }
+
+  /* ------------------------------------------------------------------
+   * Bullet-list styling for exec summary, invalidation markers
+   * ------------------------------------------------------------------ */
+  ul.plain { list-style: none; padding-left: 0; }
+  ul.plain li {
+    padding: 2mm 0 2mm 6mm;
+    position: relative;
+  }
+  ul.plain li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 5mm;
+    width: 3mm;
+    border-top: 1px solid #b8893a;
+  }
+
+  /* ------------------------------------------------------------------
+   * Disclaimer footer
+   * ------------------------------------------------------------------ */
+  .disclaimer {
+    margin-top: 12mm;
+    padding: 5mm;
+    background: #f5efdd;
+    border-left: 3pt solid #b8893a;
+    font-size: 8.5pt;
+    color: #4a4030;
+    line-height: 1.55;
+  }
+</style>
+</head>
+<body>
+
+  {# ==================== COVER ==================== #}
+  <div class="cover">
+    <div>
+      <div class="brand">Aetherius <span>Risk Intelligence</span></div>
+      <h1>Target Stress-Test Deck</h1>
+      <div class="subject">
+        {{ cover.target_name }}
+        {% if cover.target_ticker %}(<span class="mono">{{ cover.target_ticker }}</span>){% endif %}
+      </div>
+      <div class="cover-facts">
+        <div>
+          <div class="k">Analysis window</div>
+          <div class="v">{{ cover.window_start }} &rarr; {{ cover.window_end }}</div>
+        </div>
+        <div>
+          <div class="k">Engagement date</div>
+          <div class="v">{{ cover.engagement_date }}</div>
+        </div>
+        <div>
+          <div class="k">Sector</div>
+          <div class="v">{{ cover.sector or "—" }}</div>
+        </div>
+        <div>
+          <div class="k">Deck version</div>
+          <div class="v">{{ cover.deck_version }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="cover-footnote">
+      Detection track record on 3 frozen historical crises &mdash;
+      {{ track_record.aggregate.detected_total }} of {{ track_record.aggregate.affected_total }} affected names detected
+      at elevated / high severity, {{ track_record.aggregate.false_positives_total }} false positives on controls.
+      Full methodology in the working paper referenced on the final page.
+      Aetherius is an information and risk-monitoring service, not investment advice.
+    </div>
+  </div>
+
+  {# ==================== EXECUTIVE SUMMARY ==================== #}
+  <section>
+    <div class="eyebrow">01 &middot; Executive summary</div>
+    <h2 class="section">What we found on the window</h2>
+    <ul class="plain">
+      {% for bullet in executive_summary %}
+      <li>{{ bullet }}</li>
+      {% endfor %}
+    </ul>
+    {% if thesis %}
+    <p style="margin-top: 6mm;"><strong>Analyst thesis (as supplied):</strong> <em>{{ thesis }}</em></p>
+    {% endif %}
+  </section>
+
+  {# ==================== DEPENDENCY MAP ==================== #}
+  <section>
+    <div class="eyebrow">02 &middot; Dependency map</div>
+    <h2 class="section">Target and declared counterparties</h2>
+    <p><strong>Target:</strong> {{ dependency_map.target.name }} (<span class="mono">{{ dependency_map.target.ticker }}</span>){% if dependency_map.target.sector %}, {{ dependency_map.target.sector }}{% endif %}. Priority: {{ dependency_map.target.priority_level }}.</p>
+    {% if dependency_map.counterparties %}
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 18%;">Ticker</th>
+          <th style="width: 32%;">Counterparty</th>
+          <th style="width: 22%;">Relationship</th>
+          <th style="width: 14%;">Strength</th>
+          <th>Sector</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cp in dependency_map.counterparties %}
+        <tr>
+          <td class="mono">{{ cp.ticker }}</td>
+          <td>{{ cp.name }}</td>
+          <td>{{ cp.relationship_type }}</td>
+          <td>{{ "%.2f"|format(cp.strength) }}</td>
+          <td>{{ cp.sector or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p><em>No counterparties declared. Signals below reflect target-only exposure.</em></p>
+    {% endif %}
+  </section>
+
+  {# ==================== KEY METRICS ==================== #}
+  <section>
+    <div class="eyebrow">03 &middot; Key metrics</div>
+    <h2 class="section">Window at a glance</h2>
+    <div class="metrics">
+      <div class="metric">
+        <div class="k">Observations reviewed</div>
+        <div class="v">{{ metadata.observations_in_window }}</div>
+      </div>
+      <div class="metric">
+        <div class="k">Shippable flags</div>
+        <div class="v">{{ metadata.shippable_flags }}</div>
+      </div>
+      <div class="metric">
+        <div class="k">Peak severity</div>
+        <div class="v severity-{{ metadata.peak_severity or 'low' }}">{{ metadata.peak_severity or "—" }}</div>
+      </div>
+      <div class="metric">
+        <div class="k">First elevated flag</div>
+        <div class="v">{{ metadata.first_elevated_flag_at[:10] if metadata.first_elevated_flag_at else "—" }}</div>
+      </div>
+    </div>
+  </section>
+
+  {# ==================== TOP EVIDENCE ==================== #}
+  <section class="new-page">
+    <div class="eyebrow">04 &middot; Top evidence</div>
+    <h2 class="section">Highest-severity items with source links</h2>
+    {% if top_evidence %}
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Observed</th>
+          <th style="width: 10%;">Ticker</th>
+          <th style="width: 13%;">Severity</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in top_evidence %}
+        <tr>
+          <td class="mono">{{ e.observed_at[:16].replace("T", " ") }}Z</td>
+          <td class="mono">{{ e.ticker }}</td>
+          <td class="severity-{{ e.severity }}">{{ e.severity }}</td>
+          <td>
+            <strong>{{ e.title }}</strong><br>
+            <span style="font-size: 8.5pt; color: #7a6a4a;">
+              {{ e.source_name }} &middot; {{ e.source_type }}
+              {% if e.source_url %} &middot; <a href="{{ e.source_url }}">{{ e.source_url }}</a>{% endif %}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p><em>No evidence-backed elevated / high severity flags on this window.</em></p>
+    {% endif %}
+  </section>
+
+  {# ==================== TIMELINE ==================== #}
+  <section class="new-page">
+    <div class="eyebrow">05 &middot; Timeline</div>
+    <h2 class="section">Chronology of shippable flags on the window</h2>
+    {% if timeline %}
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Observed</th>
+          <th style="width: 10%;">Ticker</th>
+          <th style="width: 13%;">Severity</th>
+          <th>Title / Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in timeline %}
+        <tr>
+          <td class="mono">{{ e.observed_at[:16].replace("T", " ") }}Z</td>
+          <td class="mono">{{ e.ticker }}</td>
+          <td class="severity-{{ e.severity }}">{{ e.severity }}</td>
+          <td>
+            {{ e.title }}<br>
+            <span style="font-size: 8.5pt; color: #7a6a4a;">{{ e.source_name }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p><em>No shippable flags on this window.</em></p>
+    {% endif %}
+  </section>
+
+  {# ==================== INVALIDATION MARKERS ==================== #}
+  <section>
+    <div class="eyebrow">06 &middot; Invalidation markers</div>
+    <h2 class="section">What would prove the downside thesis wrong</h2>
+    <p>A signal on this window is a working hypothesis, not a conclusion. Before acting on any elevated / high flag, the following questions should be answered:</p>
+    <ul class="plain">
+      {% for marker in invalidation_markers %}
+      <li>{{ marker }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  {# ==================== TRACK RECORD ==================== #}
+  <section>
+    <div class="eyebrow">07 &middot; Detection track record</div>
+    <h2 class="section">Historical evidence on structurally comparable events</h2>
+    <p>The scoring and mapping pipeline used in this deck is the same one replayed against three frozen historical crises. Detection is measured on information available at the time.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th style="width: 15%;">Affected</th>
+          <th style="width: 15%;">Detected</th>
+          <th style="width: 20%;">Median lead</th>
+          <th style="width: 15%;">FP on control</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ev in track_record.events %}
+        <tr>
+          <td>{{ ev.event_name }}</td>
+          <td>{{ ev.affected }}</td>
+          <td><strong>{{ ev.detected }}</strong></td>
+          <td>{{ "%.2f"|format(ev.median_lead_days) }} days</td>
+          <td>{{ ev.false_positives_on_control }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="font-weight: 600; background: #fbf7ec;">
+          <td>Aggregate</td>
+          <td>{{ track_record.aggregate.affected_total }}</td>
+          <td>{{ track_record.aggregate.detected_total }}</td>
+          <td>&mdash;</td>
+          <td>{{ track_record.aggregate.false_positives_total }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 4mm; font-size: 9pt; color: #7a6a4a;">{{ track_record.note }}</p>
+  </section>
+
+  {# ==================== METHODOLOGY & DISCLAIMER ==================== #}
+  <section>
+    <div class="eyebrow">08 &middot; Methodology &amp; disclaimer</div>
+    <h2 class="section">How this deck was built</h2>
+    <p>Each in-window observation was scored by the production Aetherius pipeline:
+    (a) conservative entity mapping with word-boundary regex and an acronym stoplist;
+    (b) a deterministic 7-factor risk-scoring formula (source confidence, freshness,
+    directness, cross-confirmation, watchlist priority, event severity, relationship strength);
+    (c) an adverse-language gate over a fixed {{ metadata.adverse_terms_taxonomy_size }}-term
+    downside taxonomy. A flag is "shippable" only when severity reaches elevated or high AND
+    at least one adverse term is present in the source text.</p>
+    <p>No LLM narrative is used to decide severity. Every score in this deck is deterministic
+    from the observation dict and the scoring code. Re-running the same corpus at the same
+    commit produces bit-identical results.</p>
+    <div class="disclaimer">
+      <strong>Disclaimer.</strong> Aetherius is an information and risk-monitoring service, not
+      investment advice and not a recommendation to buy, sell, or hold any security. Signals
+      are derived from third-party sources believed to be reliable but are not guaranteed to be
+      accurate, complete, or timely. Nothing here is a forecast or a guarantee of any outcome.
+      Past detection of events does not guarantee future results. You are solely responsible for
+      your own investment decisions.
+    </div>
+  </section>
+
+</body>
+</html>

@@ -28,8 +28,7 @@ What happened instead?
 
 - OS:
 - Python version:
-- Run mode: (local replay / orchestrator / backend API)
-- Model provider config used: (if relevant)
+- Run mode: (backtest / backend API / deck build)
 
 ## Logs or artifacts
 

@@ -47,13 +47,17 @@ def construct_state(
     )
 
     nodes: list[GraphNode] = [
+        GraphNode("node-discord", "Discord Inc. (Target)", "company", {"margin_buffer": 0.25, "growth_rate": 0.35}),
+        GraphNode("node-aws", "AWS Cloud Infrastructure", "supplier", {"stress": 0.60, "dependency": 0.90}),
+        GraphNode("node-app-stores", "Apple/Google App Stores", "channel", {"fee_pressure": 0.80}),
+        GraphNode("node-consumer-spend", "Discretionary Consumer Spend", "macro", {"stress": 0.75}),
         GraphNode("node-rates", "Rates", "macro", {"stress": 0.55}),
-        GraphNode("node-input-costs", "Input Costs", "factor", {"stress": 0.62}),
-        GraphNode("node-consumer-saas", "Consumer SaaS", "sector", {"margin_buffer": 0.40}),
     ]
     edges: list[GraphEdge] = [
-        GraphEdge("node-rates", "node-input-costs", "financing_pressure", 0.72),
-        GraphEdge("node-input-costs", "node-consumer-saas", "cost_readthrough", 0.78),
+        GraphEdge("node-rates", "node-consumer-spend", "financing_pressure", 0.85),
+        GraphEdge("node-consumer-spend", "node-discord", "subscription_churn_risk", 0.75),
+        GraphEdge("node-aws", "node-discord", "cost_readthrough", 0.80),
+        GraphEdge("node-app-stores", "node-discord", "margin_compression", 0.65),
     ]
     if db_nodes:
         nodes.extend(db_nodes)

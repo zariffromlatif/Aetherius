@@ -88,12 +88,47 @@ def _contains_phrase(text_upper: str, phrase: str | None) -> bool:
     return re.search(rf"(?<![A-Z0-9]){re.escape(phrase)}(?![A-Z0-9])", text_upper) is not None
 
 
+def match_item(
+    text_upper: str,
+    ticker: str,
+    company_name: str | None = None,
+    sector: str | None = None,
+    aliases: list[str] | None = None,
+    relationships: list[dict] | None = None,
+) -> tuple[str, float] | None:
+    """Pure word-boundary matching core shared by the DB mapper and offline backtests.
+
+    Returns ``(relationship_type, relevance_score)`` for the best match, or ``None``.
+    Precedence: direct (ticker/company/alias) > sector > relationship readthrough.
+    ``text_upper`` must already be upper-cased; ``_contains_phrase`` upper-cases each
+    phrase internally, so callers may pass mixed-case names/aliases.
+
+    ``relationships`` is a list of dicts with keys ``related_entity_name``,
+    ``related_ticker``, ``relationship_type``, ``strength`` (strength optional).
+    """
+    direct_hit = (
+        _contains_phrase(text_upper, ticker.upper())
+        or _contains_phrase(text_upper, company_name)
+        or any(_contains_phrase(text_upper, alias) for alias in (aliases or []))
+    )
+    if direct_hit:
+        return ("direct", 0.9)
+    if sector and _contains_phrase(text_upper, sector):
+        return ("sector", 0.55)
+    for link in relationships or []:
+        if _contains_phrase(text_upper, link.get("related_entity_name")) or (
+            link.get("related_ticker") and _contains_phrase(text_upper, link.get("related_ticker"))
+        ):
+            return (f"{link.get('relationship_type')}_readthrough", float(link.get("strength") or 0.45))
+    return None
+
+
 def map_to_watchlist(db: Session, observation: SourceObservations) -> list[EvidenceLinks]:
     """Map an observation to active watchlist items using word-boundary matching.
 
     Match precedence per item: direct (ticker/company/alias) > sector >
-    relationship readthrough. Word-boundary matching prevents short tickers
-    from matching inside unrelated words.
+    relationship readthrough. Delegates the matching decision to the pure
+    ``match_item`` helper so the same logic is exercised by offline backtests.
     """
     text_upper = observation.raw_text.upper()
     matches: list[EvidenceLinks] = []
@@ -102,36 +137,43 @@ def map_to_watchlist(db: Session, observation: SourceObservations) -> list[Evide
     aliases_by_ticker: dict[str, list[str]] = {}
     for a in aliases:
         if a.ticker:
-            aliases_by_ticker.setdefault(a.ticker.upper(), []).append(a.alias.upper())
+            aliases_by_ticker.setdefault(a.ticker.upper(), []).append(a.alias)
 
     watch_items = db.query(WatchlistItems).filter(WatchlistItems.active.is_(True)).all()
     for item in watch_items:
-        rel = None
-        score = 0.0
-        ticker_up = item.ticker.upper()
-        item_aliases = aliases_by_ticker.get(ticker_up, [])
-
-        direct_hit = (
-            _contains_phrase(text_upper, ticker_up)
-            or _contains_phrase(text_upper, item.company_name)
-            or any(_contains_phrase(text_upper, alias) for alias in item_aliases)
+        item_aliases = aliases_by_ticker.get(item.ticker.upper(), [])
+        links = db.query(EntityRelationships).filter(EntityRelationships.watchlist_item_id == item.id).all()
+        relationships = [
+            {
+                "related_entity_name": link.related_entity_name,
+                "related_ticker": link.related_ticker,
+                "relationship_type": link.relationship_type,
+                "strength": link.strength,
+            }
+            for link in links
+        ]
+        result = match_item(
+            text_upper,
+            ticker=item.ticker,
+            company_name=item.company_name,
+            sector=item.sector,
+            aliases=item_aliases,
+            relationships=relationships,
         )
-        if direct_hit:
-            rel = "direct"
-            score = 0.9
-        elif item.sector and _contains_phrase(text_upper, item.sector):
-            rel = "sector"
-            score = 0.55
-        else:
-            links = db.query(EntityRelationships).filter(EntityRelationships.watchlist_item_id == item.id).all()
-            for link in links:
-                if _contains_phrase(text_upper, link.related_entity_name) or (
-                    link.related_ticker and _contains_phrase(text_upper, link.related_ticker)
-                ):
-                    rel = f"{link.relationship_type}_readthrough"
-                    score = float(link.strength or 0.45)
-                    break
-        if rel:
+        if result:
+            rel, score = result
+            # Idempotency: re-running mapping on the same observation must not
+            # insert duplicate evidence links for the same (observation, item).
+            existing = (
+                db.query(EvidenceLinks)
+                .filter(
+                    EvidenceLinks.observation_id == observation.id,
+                    EvidenceLinks.watchlist_item_id == item.id,
+                )
+                .first()
+            )
+            if existing:
+                continue
             ev = EvidenceLinks(
                 observation_id=observation.id,
                 watchlist_item_id=item.id,

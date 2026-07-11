@@ -1,0 +1,23 @@
+{
+  "event_id": "svb-2023",
+  "event_name": "Silicon Valley Bank collapse and regional-bank contagion (March 2023)",
+  "window_start": "2023-03-06T00:00:00Z",
+  "window_end": "2023-03-12T23:59:59Z",
+  "description": "SVB Financial Group disclosed a large securities loss and capital raise after close on 2023-03-08; a deposit run followed and the FDIC took SVB into receivership on 2023-03-10. Contagion spread to other regional banks; Signature Bank was closed on 2023-03-12.",
+  "primary_sources": [
+    "SEC EDGAR, SVB Financial Group (CIK 0000719739), Form 8-K filed 2023-03-08",
+    "FDIC press release pr23016 (2023-03-10): https://www.fdic.gov/news/press-releases/2023/pr23016.html",
+    "Federal Reserve joint statement (2023-03-12): https://www.federalreserve.gov/newsevents/pressreleases/monetary20230312b.htm"
+  ],
+  "provenance_note": "Regulatory items (SEC/FDIC/Fed) carry exact primary-source links. News items are curated public-record summaries of widely reported events and cite the publisher; replace with primary article links before any external/customer-facing use.",
+  "affected": [
+    {"ticker": "SIVB", "realized_event_date": "2023-03-10T00:00:00Z", "expected_min_severity": "high", "realized_event": "FDIC receivership 2023-03-10; common equity effectively wiped out."},
+    {"ticker": "SBNY", "realized_event_date": "2023-03-12T00:00:00Z", "expected_min_severity": "elevated", "realized_event": "Closed by NY Department of Financial Services 2023-03-12."},
+    {"ticker": "FRC", "realized_event_date": "2023-03-13T00:00:00Z", "expected_min_severity": "elevated", "realized_event": "Acute deposit flight from 2023-03-13; ultimately failed and was acquired by JPMorgan 2023-05-01."},
+    {"ticker": "WAL", "realized_event_date": "2023-03-13T00:00:00Z", "expected_min_severity": "elevated", "realized_event": "Sharp share-price drawdown and deposit pressure week of 2023-03-13."},
+    {"ticker": "PACW", "realized_event_date": "2023-03-13T00:00:00Z", "expected_min_severity": "elevated", "realized_event": "Sharp share-price drawdown and deposit pressure week of 2023-03-13."}
+  ],
+  "controls_should_not_flag": [
+    {"ticker": "MSFT", "reason": "Non-bank holding mentioned only in benign product news; an elevated/high flag here is a false positive."}
+  ]
+}

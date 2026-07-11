@@ -2,7 +2,7 @@
 
 This README is scoped to the operational backend module only.
 
-For full project overview, causal simulation architecture, and replay proof stack, use the root `README.md`.
+For product positioning, deliverable scope, and detection track record, see the root `README.md`.
 
 ## Scope
 
@@ -66,4 +66,4 @@ All protected routes require bearer authentication and role checks.
 ## Ownership Boundary
 
 - Update this subtree for backend workflow changes (auth, review, delivery, audit).
-- Update root modules (`core/`, `simulations/`, `orchestrator.py`) for causal simulation/replay behavior.
+- The historical detection-timing evidence lives in root `simulations/backtest/`.
