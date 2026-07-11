@@ -1,0 +1,85 @@
+{
+  "event_id": "svb-2023",
+  "event_name": "Silicon Valley Bank collapse and regional-bank contagion (March 2023)",
+  "commit": "rebuild-gdelt-v2",
+  "dataset_window": {
+    "start": "2023-03-06T00:00:00Z",
+    "end": "2023-03-12T23:59:59Z"
+  },
+  "observation_count": 98,
+  "watchlist_size": 6,
+  "affected_count": 5,
+  "control_count": 1,
+  "detection_recall": 1.0,
+  "detections_reaching_expected_severity": 5,
+  "mapping_precision": 1.0,
+  "false_positive_tickers": [],
+  "false_positive_count": 0,
+  "median_lead_time_hours": 56.2,
+  "median_lead_time_days": 2.34,
+  "detections": [
+    {
+      "ticker": "FRC",
+      "first_flag_at": "2023-03-09T17:45:00Z",
+      "realized_event_date": "2023-03-13T00:00:00Z",
+      "lead_time_hours": 78.2,
+      "lead_time_days": 3.26,
+      "first_flag_severity": "high",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "Why Shares of First Republic Bank Are Falling Today",
+      "evidence_source": "fool.com"
+    },
+    {
+      "ticker": "PACW",
+      "first_flag_at": "2023-03-10T15:45:00Z",
+      "realized_event_date": "2023-03-13T00:00:00Z",
+      "lead_time_hours": 56.2,
+      "lead_time_days": 2.34,
+      "first_flag_severity": "elevated",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "Silicon Valley Bank Trading Halted , Company Seeks Buyer , Financial Stocks Shudder",
+      "evidence_source": "investors.com"
+    },
+    {
+      "ticker": "SBNY",
+      "first_flag_at": "2023-03-09T12:30:00Z",
+      "realized_event_date": "2023-03-12T00:00:00Z",
+      "lead_time_hours": 59.5,
+      "lead_time_days": 2.48,
+      "first_flag_severity": "high",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "Signature Bank stock drops sharply after Silvergate announces winddown",
+      "evidence_source": "marketwatch.com"
+    },
+    {
+      "ticker": "SIVB",
+      "first_flag_at": "2023-03-09T13:00:00Z",
+      "realized_event_date": "2023-03-10T00:00:00Z",
+      "lead_time_hours": 11.0,
+      "lead_time_days": 0.46,
+      "first_flag_severity": "high",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "SVB Financial stock plummets toward biggest one - day selloff in 23 years after stock offering , large losses on securities sales",
+      "evidence_source": "marketwatch.com"
+    },
+    {
+      "ticker": "WAL",
+      "first_flag_at": "2023-03-10T15:45:00Z",
+      "realized_event_date": "2023-03-13T00:00:00Z",
+      "lead_time_hours": 56.2,
+      "lead_time_days": 2.34,
+      "first_flag_severity": "elevated",
+      "peak_severity": "elevated",
+      "reached_expected_severity": true,
+      "evidence_title": "Silicon Valley Bank Trading Halted , Company Seeks Buyer , Financial Stocks Shudder",
+      "evidence_source": "investors.com"
+    }
+  ],
+  "misses": [],
+  "shippable_flag_count": 66,
+  "anti_hype_note": "Measures detection timing and ranking on a frozen historical window. This is early-detection and prioritization evidence, NOT a return forecast or guarantee. Causal-mechanism confidence is not claimed here."
+}

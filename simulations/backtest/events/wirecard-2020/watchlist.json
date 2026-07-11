@@ -1,0 +1,25 @@
+{
+  "watchlist_name": "Wirecard concentrated position + unrelated control (backtest fixture)",
+  "as_of": "2020-06-01",
+  "notes": "Minimal concentrated book used to backtest detection timing on the June 2020 Wirecard AG accounting-fraud disclosure and insolvency. WDI is the primary target; DTE (Deutsche Telekom) is an unrelated non-fintech DAX control that must not be flagged by Wirecard-specific stress. Peer-readthrough names such as Adyen and PayPal are intentionally EXCLUDED from this fixture because peer relationships are analyst-supplied context: for an idiosyncratic fraud event the peer-readthrough is a valid analyst-facing flag, not a pipeline false positive, and would require a separate 'human-reviewer-dismissed' rubric to score cleanly.",
+  "items": [
+    {
+      "ticker": "WDI",
+      "company_name": "Wirecard AG",
+      "sector": "Payments",
+      "priority_level": "critical",
+      "book_context": "Primary position; DAX-listed German payments processor.",
+      "aliases": ["Wirecard", "Wirecard AG"],
+      "relationships": []
+    },
+    {
+      "ticker": "DTE",
+      "company_name": "Deutsche Telekom",
+      "sector": "Telecommunications",
+      "priority_level": "normal",
+      "book_context": "Non-fintech DAX control. Should NOT be flagged by Wirecard-specific fraud disclosure.",
+      "aliases": ["Deutsche Telekom"],
+      "relationships": []
+    }
+  ]
+}

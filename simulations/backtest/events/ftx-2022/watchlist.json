@@ -1,0 +1,49 @@
+{
+  "watchlist_name": "Crypto exchange / lender counterparty book (backtest fixture)",
+  "as_of": "2022-11-01",
+  "notes": "Synthetic concentrated crypto-counterparty book used to backtest detection timing on the November 2022 FTX collapse. FTX Trading Ltd (private) is not directly investable; its collapse propagated through BlockFi and Genesis Trading (both private / non-listed). This fixture uses public equities materially exposed to FTX / Alameda counterparty risk: Silvergate Capital (SI) and Signature Bank (SBNY, crypto-linked deposits), plus Coinbase (COIN) as an exchange peer. MSFT is a non-crypto control.",
+  "items": [
+    {
+      "ticker": "SI",
+      "company_name": "Silvergate Capital",
+      "sector": "Banks",
+      "priority_level": "critical",
+      "book_context": "Crypto-focused bank with direct deposit relationships to FTX and other exchanges. Highest direct counterparty exposure in the public-equity universe.",
+      "aliases": ["Silvergate", "Silvergate Capital"],
+      "relationships": [
+        {"related_entity_name": "FTX", "related_ticker": null, "relationship_type": "customer_readthrough", "strength": 0.85}
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "company_name": "Coinbase Global",
+      "sector": "Crypto Exchange",
+      "priority_level": "high",
+      "book_context": "Largest US-listed crypto exchange; exchange peer to FTX with counterparty and sector-contagion exposure.",
+      "aliases": ["Coinbase"],
+      "relationships": [
+        {"related_entity_name": "FTX", "related_ticker": null, "relationship_type": "peer", "strength": 0.6}
+      ]
+    },
+    {
+      "ticker": "SBNY",
+      "company_name": "Signature Bank",
+      "sector": "Banks",
+      "priority_level": "normal",
+      "book_context": "Crypto-linked deposit base via Signet payments platform; secondary counterparty exposure to FTX ecosystem.",
+      "aliases": ["Signature Bank"],
+      "relationships": [
+        {"related_entity_name": "FTX", "related_ticker": null, "relationship_type": "customer_readthrough", "strength": 0.5}
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "company_name": "Microsoft Corporation",
+      "sector": "Software",
+      "priority_level": "normal",
+      "book_context": "Non-crypto control position. Should NOT be flagged by FTX-specific stress.",
+      "aliases": ["Microsoft"],
+      "relationships": []
+    }
+  ]
+}

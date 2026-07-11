@@ -1,13 +1,14 @@
 # Default owners for all files
 * @zariffromlatif
 
-# Core simulation ownership
-/core/ @zariffromlatif
-/orchestrator.py @zariffromlatif
+# Backtest / detection-timing evidence
 /simulations/ @zariffromlatif
 
-# Operational backend ownership
+# Operational backend
 /aetherius/ @zariffromlatif
+
+# Landing page
+/landing_page/ @zariffromlatif
 
 # Governance and policy docs
 /README.md @zariffromlatif

@@ -2,17 +2,15 @@
 
 Thanks for contributing to Aetherius.
 
-This project combines:
-- a research-oriented causal simulation core (`core/`, `orchestrator.py`)
-- a supporting pilot backend (`aetherius/`)
+This project is a per-target risk-report pipeline: SEC EDGAR ingestion, conservative entity mapping, deterministic scoring, and human-supervised PDF delivery — with historical detection-timing backtests as its credibility artifact.
 
-Please keep contributions reproducible, benchmark-aware, and showcase-clean.
+Please keep contributions reproducible, evidence-based, and honest.
 
 ## 1) Contribution Workflow
 
 1. Create a feature branch.
-2. Keep changes focused to one area (core, simulations, docs, or backend).
-3. Run tests/lint locally before opening a PR.
+2. Keep changes focused to one area (ingestion, mapping, scoring, delivery, backtests, docs).
+3. Run tests locally before opening a PR.
 4. In the PR description, include:
    - what changed
    - why it changed
@@ -20,67 +18,45 @@ Please keep contributions reproducible, benchmark-aware, and showcase-clean.
 
 ## 2) Repository Hygiene (Required)
 
-- Treat generated outputs as ephemeral:
-  - `simulations/artifacts/`
-  - `.aetherius_prompt_cache.json`
-  - runtime logs
+- Treat generated outputs as ephemeral: `simulations/artifacts/`, runtime logs.
 - Do not commit secrets (`.env`, API keys, tokens).
-- Keep canonical implementations only; remove duplicate legacy scripts.
-- Keep root docs technical and evidence-based.
-- Move internal planning/business-only drafts to private storage or an archive branch.
+- Do not import from `archive/` — it retains deprecated scaffolding from an earlier positioning that was walked back.
+- Keep root docs technical and evidence-based. Marketing claims must match implementation reality.
 
 ## 3) Coding Guidelines
 
 - Prefer small, testable functions.
-- Preserve deterministic fallback behavior for critical paths.
-- Keep risk outputs in strict A-E format.
-- Maintain backward-compatible interfaces where possible (`core/contracts.py`).
-- Use ASCII text unless a file already depends on Unicode symbols.
+- Preserve deterministic behavior in the scoring and mapping paths — an LLM must never gate what the pipeline flags.
+- Match the surrounding code's style (comment density, naming, idiom).
+- Use ASCII unless the file already uses Unicode.
 
 ## 4) Testing and Validation
 
-Minimum expected validation:
+Run the full test suite:
 
 ```bash
-python simulations/run_replay.py --shock-id shock-rate-50
+pytest aetherius/tests
 ```
 
-For code changes touching orchestrator/core behavior:
-- verify replay artifacts are generated
-- verify metrics JSON includes expected fields
-- confirm no linter errors
+The SVB-2023 backtest is a pinned integration test — any change that breaks it must be justified in the PR description.
 
-For completion-level changes, follow:
-- `docs/completion_validation_runbook.md`
+For scoring, mapping, or ingestion changes, add or update a fixture-driven test alongside the change.
 
-## 5) Simulation/Benchmark Standards
+## 5) Backtest Standards
 
-If you add or update replay studies:
-- use `docs/README_replay_case_studies.md` template
-- include methodology, limitations, and reproducibility metadata
-- avoid unverified performance claims
+When adding a new backtest event under `simulations/backtest/events/`:
 
-If you add scoring or causal logic:
-- align outputs with `docs/benchmark_spec.md`
-- include at least one measurable validation artifact
+- Include `watchlist.json`, `ground_truth.json`, and `observations.jsonl`.
+- **Observations must come from a real primary-source archive** (GDELT, SEC EDGAR, Wayback, etc.) — not hand-authored summaries. The `provenance` field must state the archive and query used.
+- Include a non-affected control name in the watchlist to test for false positives.
+- Do not tune the pipeline against a fixture, then claim the fixture as validation.
 
-## 6) TTC Provider Changes
-
-When modifying model/provider integrations:
-- preserve safe fallback when provider keys/calls fail
-- keep cache behavior and telemetry intact
-- ensure env-driven configuration remains supported:
-  - `AETHERIUS_ENABLE_TTC`
-  - `AETHERIUS_MODEL_NAME`
-  - `AETHERIUS_API_KEY`
-  - `AETHERIUS_API_BASE_URL`
-  - `AETHERIUS_API_TIMEOUT_SECONDS`
-
-## 7) Pull Request Checklist
+## 6) Pull Request Checklist
 
 - [ ] Scope is focused and documented
 - [ ] No secrets committed
 - [ ] No generated artifacts committed
-- [ ] Replay run succeeds for affected flow
+- [ ] `pytest aetherius/tests` passes
+- [ ] SVB backtest still passes if scoring/mapping changed
 - [ ] Docs updated when behavior changes
-- [ ] Claims in README/docs match implementation reality
+- [ ] Claims in README / landing page match implementation reality

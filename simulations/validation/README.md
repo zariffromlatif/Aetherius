@@ -1,23 +1,20 @@
 # Validation Evidence Folder
 
-Use this folder to store completion-check evidence required by:
-
-- `docs/completion_validation_runbook.md`
-
-## Suggested structure
+Per-event validation artifacts live in dated subfolders here. Each event's folder should contain:
 
 ```text
 simulations/validation/
-  YYYY-MM-DD/
-    logs/
-    metrics/
-    screenshots/
-    summary.md
+  <event-id>/
+    metrics.json     # produced by simulations/backtest/run_backtest.py
+    summary.md       # human-readable writeup: methodology, corpus provenance, limitations
 ```
 
-## What to store
+See `simulations/validation/svb-2023/` for the reference format.
 
-- 48-hour autonomy run logs (`aetherius_system.log` snapshots)
-- replay metrics JSON files used for TTC/cache proof
-- provider dashboard screenshots showing cached token usage
-- final signoff summary with pass/fail per gate
+The `metrics.json` schema is defined by the backtest harness itself (`simulations/backtest/run_backtest.py`) and includes:
+
+- `detection_recall`, `mapping_precision`, `false_positive_count`, `median_lead_time_days`
+- per-ticker `detections` and `misses`
+- an `anti_hype_note` making the scope of the evidence explicit
+
+Every new event must include a real primary-source `observations.jsonl` under `simulations/backtest/events/<event-id>/` — see `CONTRIBUTING.md` §5.

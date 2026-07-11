@@ -1,0 +1,37 @@
+{
+  "event_id": "wirecard-2020",
+  "event_name": "Wirecard AG accounting fraud disclosure and insolvency (June 2020)",
+  "commit": "rebuild-gdelt-v3",
+  "dataset_window": {
+    "start": "2020-06-15T00:00:00Z",
+    "end": "2020-06-30T23:59:59Z"
+  },
+  "observation_count": 14,
+  "watchlist_size": 2,
+  "affected_count": 1,
+  "control_count": 1,
+  "detection_recall": 1.0,
+  "detections_reaching_expected_severity": 1,
+  "mapping_precision": 1.0,
+  "false_positive_tickers": [],
+  "false_positive_count": 0,
+  "median_lead_time_hours": 158.5,
+  "median_lead_time_days": 6.6,
+  "detections": [
+    {
+      "ticker": "WDI",
+      "first_flag_at": "2020-06-18T09:30:00Z",
+      "realized_event_date": "2020-06-25T00:00:00Z",
+      "lead_time_hours": 158.5,
+      "lead_time_days": 6.6,
+      "first_flag_severity": "high",
+      "peak_severity": "high",
+      "reached_expected_severity": true,
+      "evidence_title": "Wirecard shares plunge as Ernst & Young says no evidence for 1 . 9 billion euros of cash on balance sheet",
+      "evidence_source": "marketwatch.com"
+    }
+  ],
+  "misses": [],
+  "shippable_flag_count": 2,
+  "anti_hype_note": "Measures detection timing and ranking on a frozen historical window. This is early-detection and prioritization evidence, NOT a return forecast or guarantee. Causal-mechanism confidence is not claimed here."
+}

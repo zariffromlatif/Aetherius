@@ -9,5 +9,14 @@
     <p><b>Severity:</b> {{ item.severity_level or "n/a" }} | <b>Confidence:</b> {{ item.confidence_level or "n/a" }}</p>
     <p>{{ item.body }}</p>
     {% endfor %}
+    <hr />
+    <p style="font-size: 11px; color: #555;">
+      <b>Disclaimer:</b> Aetherius is an information and risk-monitoring service, not
+      investment advice and not a recommendation to buy, sell, or hold any security.
+      Signals are derived from third-party sources believed to be reliable but are not
+      guaranteed to be accurate, complete, or timely. Nothing here is a forecast or a
+      guarantee of any outcome. You are solely responsible for your own investment
+      decisions. Past detection of events does not guarantee future results.
+    </p>
   </body>
 </html>

@@ -1,3 +1,4 @@
+import re
 import smtplib
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -33,6 +34,55 @@ def render_pdf_bytes(briefing_run: BriefingRuns, items: list[BriefingItems]) -> 
     return HTML(string=html).write_pdf()
 
 
+# Looser markers used to detect the disclaimer regardless of template whitespace.
+# Kept in sync with the disclaimer block in templates/email/daily_brief.html
+# and templates/pdf/daily_brief.html.
+_DISCLAIMER_TOKENS = ("information and risk-monitoring service", "not investment advice")
+
+# Hype / certainty language that must never reach a client-facing brief.
+BANNED_LANGUAGE = (
+    "guaranteed",
+    "certain",
+    "must",
+    "obvious crash",
+    "sure thing",
+    "can't lose",
+    "cannot lose",
+    "risk-free",
+    "riskless",
+    "will crash",
+    "will collapse",
+    "definitely",
+)
+
+
+def _normalize(text: str) -> str:
+    return " ".join((text or "").split()).lower()
+
+
+def _contains_banned(body: str) -> bool:
+    """Whole-word/phrase match for banned language.
+
+    Word-boundary matching so legitimate, compliant prose is not rejected:
+    "uncertain"/"uncertainty" must not trip on "certain", and "must" must not
+    trip inside "mustard"/"customer". Multi-word entries match as phrases.
+    """
+    normalized = _normalize(body)
+    for term in BANNED_LANGUAGE:
+        if re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", normalized):
+            return True
+    return False
+
+
+def disclaimer_present(rendered_html: str) -> bool:
+    """True if the rendered brief contains the required disclaimer.
+
+    Whitespace-insensitive so template reflow does not silently disable the gate.
+    """
+    normalized = _normalize(rendered_html)
+    return all(_normalize(token) in normalized for token in _DISCLAIMER_TOKENS)
+
+
 def quality_gates(items: list[BriefingItems], recipient: str) -> tuple[bool, list[str]]:
     issues: list[str] = []
     if not items:
@@ -42,9 +92,8 @@ def quality_gates(items: list[BriefingItems], recipient: str) -> tuple[bool, lis
     for item in items:
         if item.severity_level in {"elevated", "high"} and not item.body:
             issues.append(f"Missing explanation body for elevated/high item: {item.title}")
-        banned = ["guaranteed", "certain", "must", "obvious crash"]
-        body = (item.body or "").lower()
-        if any(w in body for w in banned):
+        body = _normalize(item.body or "")
+        if _contains_banned(body):
             issues.append(f"Forbidden language in item: {item.title}")
     return (len(issues) == 0, issues)
 
@@ -114,6 +163,15 @@ def deliver_briefing(db: Session, briefing_run_id: str, recipient: str, channel:
 
     try:
         html = render_email(run, items)
+        # Compliance gate: never send a client-facing brief without the disclaimer.
+        if not disclaimer_present(html):
+            delivery.delivery_status = "failed"
+            delivery.error_message = "Required disclaimer missing from rendered brief."
+            delivery.attempt_count = delivery.attempt_count + 1
+            delivery.last_attempt_at = datetime.utcnow()
+            db.commit()
+            db.refresh(delivery)
+            return delivery
         # Render PDF to enforce render-success quality gate.
         _ = render_pdf_bytes(run, items)
         message_id = send_email(recipient, f"Aetherius Brief - {run.run_type}", html)

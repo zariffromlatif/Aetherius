@@ -16,9 +16,10 @@ Describe the proposed behavior.
 
 ## Scope area
 
-- [ ] Core simulation (`core/`, `orchestrator.py`, `simulations/`)
-- [ ] Backend operations (`aetherius/app/`)
-- [ ] Docs/benchmark/release process
+- [ ] Ingestion, entity mapping, scoring, or signals (`aetherius/app/services/...`)
+- [ ] Delivery / templates / review workflow
+- [ ] Backtests (`simulations/backtest/...`)
+- [ ] Docs / landing page / release process
 
 ## Acceptance criteria
 

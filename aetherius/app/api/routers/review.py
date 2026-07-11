@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -57,6 +57,11 @@ def apply_review_action_endpoint(
     claims: dict = Depends(require_operator),
     db: Session = Depends(get_db),
 ):
+    # Approving / suppressing / resending / editing a client's brief is a
+    # state-changing action that is at least as sensitive as delivery, which is
+    # admin-gated. Non-admins cannot mutate review state across clients.
+    if claims.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Review actions require admin role")
     data = payload.model_dump()
     data["operator_user_id"] = data.get("operator_user_id") or claims.get("sub")
     return set_review_action(db, briefing_run_id=briefing_run_id, **data)

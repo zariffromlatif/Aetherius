@@ -42,8 +42,11 @@ def create_signal_from_evidence(db: Session, evidence: EvidenceLinks) -> RiskSig
     if sig_type not in SIGNAL_TYPES:
         sig_type = "macro_spillover"
     sev = severity_label(risk_score)
-    if sev in {"elevated", "high"} and not evidence.id:
-        raise ValueError("Elevated/high signals require evidence references.")
+    # Elevated/high signals must rest on a persisted evidence link carrying a
+    # real relevance score. Guarding on ``evidence.id`` alone was dead code:
+    # the evidence row is always persisted by the time we get here.
+    if sev in {"elevated", "high"} and (evidence.id is None or float(evidence.relevance_score or 0.0) <= 0.0):
+        raise ValueError("Elevated/high signals require a scored evidence reference.")
 
     signal = RiskSignals(
         client_id=watchlist.client_id,

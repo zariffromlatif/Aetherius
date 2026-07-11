@@ -1,0 +1,22 @@
+{
+  "event_id": "ftx-2022",
+  "event_name": "FTX collapse and crypto counterparty contagion (November 2022)",
+  "window_start": "2022-11-02T00:00:00Z",
+  "window_end": "2022-11-14T23:59:59Z",
+  "description": "On 2022-11-02 CoinDesk published a leaked balance sheet showing Alameda Research's assets were largely FTT tokens issued by its sister exchange FTX. Binance CEO CZ announced intent to liquidate FTT on 2022-11-06, triggering a bank run on FTX; the exchange halted withdrawals on 2022-11-08 and filed for Chapter 11 bankruptcy on 2022-11-11. Contagion propagated to crypto-adjacent public equities: Silvergate Capital (crypto-focused bank) lost most of its market cap over subsequent months and was ultimately wound down in early 2023.",
+  "primary_sources": [
+    "CoinDesk Alameda balance sheet leak, 2022-11-02",
+    "Changpeng Zhao (Binance) tweet announcing FTT sale, 2022-11-06",
+    "FTX Chapter 11 bankruptcy filing (D. Del.), 2022-11-11",
+    "Silvergate Capital 8-K filings, November 2022"
+  ],
+  "provenance_note": "News observations pulled from GDELT DOC 2.0 for the window; the FTX entity itself is private so detection is measured on the public counterparties (SI, COIN, SBNY) that carried FTX exposure.",
+  "affected": [
+    {"ticker": "SI", "realized_event_date": "2022-11-11T00:00:00Z", "expected_min_severity": "high", "realized_event": "Peak counterparty-exposure disclosure risk on FTX Chapter 11 filing 2022-11-11; equity subsequently drew down materially through end of 2022 and into 2023."},
+    {"ticker": "COIN", "realized_event_date": "2022-11-11T00:00:00Z", "expected_min_severity": "elevated", "realized_event": "Sector-contagion drawdown and counterparty-review pressure on FTX collapse; equity down materially week of 2022-11-11."},
+    {"ticker": "SBNY", "realized_event_date": "2022-11-11T00:00:00Z", "expected_min_severity": "elevated", "realized_event": "Crypto-deposit review pressure through November-December 2022 following FTX collapse."}
+  ],
+  "controls_should_not_flag": [
+    {"ticker": "MSFT", "reason": "Non-crypto software; no material FTX exposure. Elevated/high flag would be a false positive."}
+  ]
+}
