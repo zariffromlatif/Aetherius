@@ -39,3 +39,13 @@ simulations/backtest/events/*/_gdelt_cache/
 dist/
 build/
 *.egg-info/
+
+# Private / local-only material — never publish to GitHub
+private/
+business_research/
+archive/
+docs/bootstrap_strategy.md
+RELEASE_CHECKLIST.md
+invoice_template.html
+AI Business Idea Generation.pdf
+*.pdf
