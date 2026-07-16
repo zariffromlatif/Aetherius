@@ -736,6 +736,26 @@ button:focus-visible {
     color: var(--color-text-light);
 }
 
+.about-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 780px;
+    margin: -1.5rem auto 0;
+    flex-wrap: wrap;
+}
+.about-links a {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-brass-deep);
+    border-bottom: 1px dashed transparent;
+    padding-bottom: 2px;
+}
+.about-links a:hover { border-bottom-color: var(--color-brass-deep); }
+
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
