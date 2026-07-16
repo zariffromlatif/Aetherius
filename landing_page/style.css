@@ -1093,6 +1093,36 @@ button:focus-visible {
 }
 .tier-details li:last-child { border-bottom: 0; }
 
+.tier-cta {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.1rem;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--color-ink);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 2px;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.tier-cta:hover {
+    background: var(--color-ink);
+    color: var(--color-bg);
+    border-color: var(--color-ink);
+}
+.tier-featured .tier-cta {
+    background: var(--color-brass);
+    border-color: var(--color-brass);
+    color: var(--color-ink);
+}
+.tier-featured .tier-cta:hover {
+    background: var(--color-brass-deep);
+    border-color: var(--color-brass-deep);
+    color: var(--color-bg);
+}
+
 .tier-note {
     max-width: 640px;
     margin: 2.5rem auto 0;
