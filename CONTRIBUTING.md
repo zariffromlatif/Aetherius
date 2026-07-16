@@ -20,7 +20,6 @@ Please keep contributions reproducible, evidence-based, and honest.
 
 - Treat generated outputs as ephemeral: `simulations/artifacts/`, runtime logs.
 - Do not commit secrets (`.env`, API keys, tokens).
-- Do not import from `archive/` — it retains deprecated scaffolding from an earlier positioning that was walked back.
 - Keep root docs technical and evidence-based. Marketing claims must match implementation reality.
 
 ## 3) Coding Guidelines

@@ -95,7 +95,6 @@ Per-target Stress-Test Decks are priced per engagement. See the landing page at 
 
 - Root `README.md` is the canonical project entry point.
 - `aetherius/README.md` covers backend implementation details.
-- `archive/` retains deprecated files from an earlier "causal simulation" positioning that was walked back. Do not import from it.
 - Generated runtime outputs (`simulations/artifacts/`, logs) are ephemeral.
 
 ## License

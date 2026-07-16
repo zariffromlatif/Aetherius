@@ -6,9 +6,9 @@ script rolls those tags into a persistent CSV ledger
 (``simulations/validation/accuracy_ledger.csv``) and prints a rolling
 usefulness summary.
 
-This is the "track record as a byproduct of getting paid" mechanism from
-docs/bootstrap_strategy.md s9 and the ground-truth policy in
-docs/benchmark_spec.md s5 (operator + client feedback labels).
+This is the "track record as a byproduct of getting paid" mechanism, using
+the ground-truth policy in docs/benchmark_spec.md s5 (operator + client
+feedback labels).
 
 Runs against the live database via the backend's SessionLocal. If the backend
 or DB is unavailable it exits cleanly with a message instead of crashing.

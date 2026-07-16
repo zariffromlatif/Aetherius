@@ -105,7 +105,7 @@ Per-target GDELT responses are cached under `_gdelt_cache/<TICKER>.json` so part
 
 ### 3.1 Note on hand-curated fixtures
 
-An earlier version of the SVB-2023 fixture was hand-authored: 10 rows of "curated public-record summaries" that the `provenance` field itself labeled as such. Any technically-literate reader of the public repository could — and did — dismiss the corpus as reverse-engineered. That fixture is preserved at `archive/svb-2023_observations_hand_curated.jsonl` for reproducibility of the earlier claim, but is not what the pipeline is now tested against. Every result in Section 4 uses only real GDELT-scraped headlines.
+An earlier version of the SVB-2023 fixture was hand-authored: 10 rows of "curated public-record summaries" that the `provenance` field itself labeled as such. Any technically-literate reader of the public repository could — and did — dismiss the corpus as reverse-engineered. That hand-authored fixture has since been removed from the repository entirely; the pipeline is now tested only against real GDELT-scraped headlines. Every result in Section 4 uses that real corpus.
 
 ---
 

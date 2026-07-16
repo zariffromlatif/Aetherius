@@ -220,7 +220,7 @@ Fix anything that fails the sniff test before Step 9.
 
 Nothing to do. The site is production.
 
-The next actions are all in the First-Dollar Playbook (`business_research/05_first_dollar_playbook.md`):
+The next actions are all in your private first-dollar playbook (kept locally, not in this public repo):
 
 1. Step 2 there — publish the working paper on GitHub, Substack, LinkedIn (over 3 days)
 2. Step 3 — build the 40-target outreach list

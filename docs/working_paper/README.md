@@ -46,4 +46,4 @@ Per-target GDELT responses are cached under `simulations/backtest/events/<event-
 - **arXiv q-fin preprint** — the paper is written in the working-paper style expected by q-fin.CP / q-fin.RM.
 - **Cold outbound email** — link to the GitHub-rendered Markdown, attach the HTML.
 
-The paper is the credibility asset that unlocks the sales channels described in `business_research/04_recommendation.md`.
+The paper is the credibility asset that unlocks the outbound sales channels.

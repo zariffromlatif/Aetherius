@@ -114,7 +114,7 @@ a:hover { color: #14161e; }
 </ol>
 <p>Per-target GDELT responses are cached under <code>_gdelt_cache/&lt;TICKER&gt;.json</code> so partial failures (rate limiting, network flap) resume without re-fetching what succeeded. The observations file is committed; the cache is git-ignored.</p>
 <h3 id="31-note-on-hand-curated-fixtures">3.1 Note on hand-curated fixtures</h3>
-<p>An earlier version of the SVB-2023 fixture was hand-authored: 10 rows of "curated public-record summaries" that the <code>provenance</code> field itself labeled as such. Any technically-literate reader of the public repository could — and did — dismiss the corpus as reverse-engineered. That fixture is preserved at <code>archive/svb-2023_observations_hand_curated.jsonl</code> for reproducibility of the earlier claim, but is not what the pipeline is now tested against. Every result in Section 4 uses only real GDELT-scraped headlines.</p>
+<p>An earlier version of the SVB-2023 fixture was hand-authored: 10 rows of "curated public-record summaries" that the <code>provenance</code> field itself labeled as such. Any technically-literate reader of the public repository could — and did — dismiss the corpus as reverse-engineered. That hand-authored fixture has since been removed from the repository entirely; the pipeline is now tested only against real GDELT-scraped headlines. Every result in Section 4 uses that real corpus.</p>
 <hr />
 <h2 id="4-results">4. Results</h2>
 <h3 id="41-aggregate">4.1 Aggregate</h3>
