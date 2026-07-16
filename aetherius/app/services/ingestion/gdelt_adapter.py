@@ -68,7 +68,7 @@ DOWNSIDE_DOMAINS: frozenset[str] = frozenset(
 
 
 def _headers() -> dict[str, str]:
-    return {"User-Agent": "Aetherius Research zarif.latif.biz@gmail.com", "Accept": "application/json"}
+    return {"User-Agent": "Aetherius Research zarif@aetheriusresearch.tech", "Accept": "application/json"}
 
 
 def _fmt_gdelt_datetime(dt: datetime) -> str:

@@ -1,7 +1,7 @@
 # Detection-Timing Backtest of a Systematic Downside-Risk Screen Across Three Modern Financial Crises
 
 **A working paper. Aetherius Risk Intelligence. July 2026.**
-**Author:** Zarif Latif · zarif.latif.biz@gmail.com
+**Author:** Zarif Latif · zarif@aetheriusresearch.tech
 
 ---
 

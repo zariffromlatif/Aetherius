@@ -89,7 +89,7 @@ The full write-up is in `docs/working_paper/detection_timing_backtest_2026-07.md
 
 ## Engagements
 
-Per-target Stress-Test Decks are priced per engagement. See the landing page at `landing_page/index.html` or email `zarif.latif.biz@gmail.com`.
+Per-target Stress-Test Decks are priced per engagement. See the landing page at `landing_page/index.html` or email `zarif@aetheriusresearch.tech`.
 
 ## Repository policy
 

@@ -18,7 +18,7 @@ Please report vulnerabilities privately. Do not open public issues with exploit 
 
 Primary contact:
 
-- Email: zarif.latif.biz@gmail.com
+- Email: zarif@aetheriusresearch.tech
 - Fallback: open a private advisory in the GitHub Security tab
 
 Include:
