@@ -3,7 +3,7 @@
 **Backtest-validated downside-risk screens for concentrated public-equity books.**
 
 ![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Status: In Development](https://img.shields.io/badge/Status-In%20Development-informational)
+![Backtests: 3 events, 9/9 recall](https://img.shields.io/badge/Backtests-3%20events%20%C2%B7%209%2F9%20recall-informational)
 
 Aetherius produces per-target Stress-Test Decks: 8–15 page PDFs that map a public-equity target's counterparties and funding sources, timeline the 90 days of filings and news scored by severity, and disclose the pipeline's historical detection track record on structurally comparable names.
 
@@ -30,7 +30,7 @@ Positioning: *"Backtest-validated downside-risk screens. Detection timing disclo
 aetherius/app/services/
   ingestion/
     edgar_adapter.py      # SEC EDGAR filings (8-K, 10-Q, 10-K, ...)
-    gdelt_adapter.py      # Real news headlines via GDELT (in progress)
+    gdelt_adapter.py      # Real news headlines via GDELT DOC 2.0
   entity_mapping/          # Word-boundary regex + acronym stoplist
   scoring/                 # Deterministic 7-factor risk formula
   signals/                 # 15-type downside signal taxonomy
