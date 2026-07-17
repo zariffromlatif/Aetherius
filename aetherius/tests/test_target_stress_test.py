@@ -382,7 +382,7 @@ def test_deck_quality_gates_does_not_flag_disclaimer_word_guaranteed() -> None:
     a legitimate safety phrase — and must not trip the banned-language gate.
     """
     fake_deck = {
-        "metadata": {"observations_in_window": 5},
+        "metadata": {"observations_in_window": 5, "target_scored_matches": 3},
         "thesis": "Concentrated regional-bank position; rate-sensitive HTM book.",
         "top_evidence": [{"source_url": "https://x/", "title": "Bank shares fell on funding pressure"}],
         "invalidation_markers": ["Has the target refuted the specific factual claims?"],
@@ -409,6 +409,27 @@ def test_deck_quality_gates_flags_empty_window() -> None:
     ok, issues = deck_quality_gates(fake_deck, html)
     assert not ok
     assert any("zero" in i.lower() for i in issues)
+
+
+def test_deck_quality_gates_flags_target_with_no_coverage() -> None:
+    """A deck can have in-window observations (from counterparties) yet zero
+    coverage on the primary target — the rate-limited-fetch case. That deck is
+    not deliverable and the gate must catch it.
+    """
+    fake_deck = {
+        "metadata": {"observations_in_window": 6, "target_scored_matches": 0},
+        "top_evidence": [{"source_url": "https://x/", "title": "Supplier news"}],
+    }
+    html = (
+        "<html><body>"
+        "This is an information and risk-monitoring service. "
+        "It is not investment advice. "
+        "Signals are not guaranteed to be accurate, complete, or timely."
+        "</body></html>"
+    )
+    ok, issues = deck_quality_gates(fake_deck, html)
+    assert not ok
+    assert any("primary target" in i.lower() for i in issues)
 
 
 def test_deck_quality_gates_flags_evidence_without_url() -> None:

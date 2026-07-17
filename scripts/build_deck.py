@@ -134,8 +134,13 @@ def _live_fetch_observations(
     window_start: datetime,
     window_end: datetime,
     max_records_per_target: int,
-) -> list[dict]:
-    """Pull GDELT articles for target + counterparties and coerce to observations."""
+) -> tuple[list[dict], dict[str, int]]:
+    """Pull GDELT articles for target + counterparties and coerce to observations.
+
+    Returns ``(observations, per_target_counts)`` where ``per_target_counts``
+    maps each target/counterparty to the number of articles GDELT returned for
+    it, so the caller can warn when a target came back empty (rate-limited).
+    """
 
     def _pull(name: str, ali: list[str]) -> list[dict]:
         try:
@@ -171,8 +176,14 @@ def _live_fetch_observations(
 
     observations: list[dict] = []
     seen_urls: set[str] = set()
+    # Per-target pulled counts so the caller can warn loudly when a target
+    # returned nothing (the rate-limit / bad-query smell — see the 429 behavior
+    # documented in gdelt_adapter). A silently thin deck is a trust-breaker.
+    per_target_counts: dict[str, int] = {}
     print(f"  [target] fetching GDELT for {company_name!r} + {aliases} ...", flush=True)
-    for row in _pull(company_name, aliases):
+    target_rows = _pull(company_name, aliases)
+    per_target_counts[company_name] = len(target_rows)
+    for row in target_rows:
         if row["source_url"] not in seen_urls:
             seen_urls.add(row["source_url"])
             observations.append(row)
@@ -180,11 +191,13 @@ def _live_fetch_observations(
         cp_name = cp.get("company_name") or cp["ticker"]
         cp_aliases = cp.get("aliases") or []
         print(f"  [{cp['ticker']}] fetching GDELT for {cp_name!r} + {cp_aliases} ...", flush=True)
-        for row in _pull(cp_name, cp_aliases):
+        cp_rows = _pull(cp_name, cp_aliases)
+        per_target_counts[cp["ticker"]] = len(cp_rows)
+        for row in cp_rows:
             if row["source_url"] not in seen_urls:
                 seen_urls.add(row["source_url"])
                 observations.append(row)
-    return observations
+    return observations, per_target_counts
 
 
 def build(args: argparse.Namespace) -> int:
@@ -206,7 +219,7 @@ def build(args: argparse.Namespace) -> int:
         observations = _load_fixture_observations(Path(args.fixture_jsonl))
     elif args.live:
         print("Pulling live observations from GDELT DOC 2.0 ...", flush=True)
-        observations = _live_fetch_observations(
+        observations, per_target_counts = _live_fetch_observations(
             company_name=target["company_name"],
             aliases=target["aliases"],
             counterparties=counterparties,
@@ -214,6 +227,35 @@ def build(args: argparse.Namespace) -> int:
             window_end=window_end,
             max_records_per_target=args.max_records,
         )
+        # Loud warning on any target that returned zero. GDELT rate-limits (429)
+        # cause a target to come back empty, which silently thins the deck. A
+        # client paying for coverage on a name must not get a deck whose subject
+        # returned nothing without a loud signal to re-run.
+        empty = [name for name, n in per_target_counts.items() if n == 0]
+        if empty:
+            print(
+                f"  ⚠ WARNING: {len(empty)} of {len(per_target_counts)} target(s) "
+                f"returned 0 articles: {', '.join(empty)}",
+                file=sys.stderr,
+                flush=True,
+            )
+            print(
+                "    This is almost always GDELT rate-limiting (429), not an "
+                "absence of news. Wait a minute and re-run before delivering.",
+                file=sys.stderr,
+                flush=True,
+            )
+        # Hard stop if the PRIMARY target came back empty — the deck's own
+        # subject has no coverage, so it is not deliverable.
+        if per_target_counts.get(target["company_name"], 0) == 0:
+            print(
+                "  ✗ ABORT: the primary target returned 0 articles. The deck "
+                "would have no coverage on its own subject. Re-run after the "
+                "rate limit clears; not writing a deck.",
+                file=sys.stderr,
+                flush=True,
+            )
+            return 3
     else:
         print(
             "ERROR: provide either --fixture-jsonl PATH or --live",

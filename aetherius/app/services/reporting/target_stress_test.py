@@ -327,6 +327,7 @@ def build_deck_data(
         "metadata": {
             "observations_in_window": len(in_window),
             "scored_matches": len(scored_rows),
+            "target_scored_matches": sum(1 for r in scored_rows if r["ticker"] == target["ticker"]),
             "shippable_flags": len(shippable),
             "peak_severity": peak_severity,
             "first_elevated_flag_at": first_flag_dt.isoformat().replace("+00:00", "Z") if first_flag_dt else None,
@@ -466,8 +467,18 @@ def deck_quality_gates(deck_data: dict[str, Any], rendered_html: str) -> tuple[b
             issues.append(f"Analyst-supplied content contains banned / hype language: {field[:80]!r}")
             break
 
-    if deck_data.get("metadata", {}).get("observations_in_window", 0) == 0:
+    meta = deck_data.get("metadata", {})
+    if meta.get("observations_in_window", 0) == 0:
         issues.append("Deck has zero in-window observations; nothing to report.")
+    elif meta.get("target_scored_matches", 0) == 0:
+        # The primary target was never mentioned in any in-window observation.
+        # For a live pull this almost always means the target's fetch returned
+        # nothing (rate-limited / bad query) rather than a genuinely quiet name —
+        # shipping a deck whose own subject has zero coverage misleads the client.
+        issues.append(
+            "Primary target has zero scored matches in the window "
+            "(likely a rate-limited or empty fetch); coverage is not deliverable."
+        )
     for i, ev in enumerate(deck_data.get("top_evidence", [])):
         if not ev.get("source_url"):
             issues.append(f"Top-evidence item {i} is missing source_url (unauditable claim).")
