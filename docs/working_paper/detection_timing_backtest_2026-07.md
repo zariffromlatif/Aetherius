@@ -231,7 +231,7 @@ The primary-financial-news whitelist was fixed before the fixtures were built. I
 
 ## 6. Reproduction
 
-The full stack is Apache-2.0 licensed and reproducible from the repository at `https://github.com/<owner>/<repo>` (branch `fix/credibility-and-isolation` at time of writing).
+The full stack is Apache-2.0 licensed and reproducible from the repository at `https://github.com/zariffromlatif/Aetherius` (branch `main`).
 
 ```bash
 # 1. Install dependencies (pinned in requirements.txt).
